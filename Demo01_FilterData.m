@@ -22,7 +22,7 @@ ylabel('Noise (V)')
 
 nfft = length(xn);
 win = hanning(nfft);
-[pxn,f] = periodogram(xn,win,'oneside',nfft,fs);
+[pxn,f] = periodogram(xn,win,'onesided',nfft,fs);
 
 figure('Name','NoisePSD')
 loglog(f,sqrt(pxn),'DisplayName','NoiseFloor')
@@ -40,7 +40,7 @@ grid on
 xlabel('Sample')
 ylabel('Raw Data (V)')
 
-[pdat,f] = periodogram(data,win,'oneside',nfft,fs);
+[pdat,f] = periodogram(data,win,'onesided',nfft,fs);
 
 figure('Name','DataPSD')
 loglog(f,sqrt(pxn),'DisplayName','NoiseFloor')
@@ -62,7 +62,7 @@ grid on
 xlabel('Sample')
 ylabel('Filtered Data (V)')
 
-[pfilt,f] = periodogram(filter_data,win,'oneside',nfft,fs);
+[pfilt,f] = periodogram(filter_data,win,'onesided',nfft,fs);
 
 figure('Name','DataPSD')
 loglog(f,sqrt(pxn),'DisplayName','NoiseFloor')

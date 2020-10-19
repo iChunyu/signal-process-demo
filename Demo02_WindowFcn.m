@@ -22,31 +22,31 @@ win_hann = hanning(nfft);
 win_bh = blackmanharris(nfft);
 
 figure('Name','SignalPSD')
-[px_rect,f] = periodogram(sig,win_rect,'oneside',nfft,fs);
+[px_rect,f] = periodogram(sig,win_rect,'onesided',nfft,fs);
 loglog(f,sqrt(px_rect),'DisplayName','RecWin')
 hold on
 grid on
-[px_hann,f] = periodogram(sig,win_hann,'oneside',nfft,fs);
+[px_hann,f] = periodogram(sig,win_hann,'onesided',nfft,fs);
 loglog(f,sqrt(px_hann),'DisplayName','HanWin')
-[px_bh,f] = periodogram(sig,win_bh,'oneside',nfft,fs);
+[px_bh,f] = periodogram(sig,win_bh,'onesided',nfft,fs);
 loglog(f,sqrt(px_bh),'DisplayName','BHWin')
 legend
 xlabel('Frequency (Hz)')
 ylabel('Power Spectrum (V/Hz^{1/2})')
 
 %% 频谱泄漏对功率谱估计的影响
-PSD = 1e-5;
+PSD = 1e-4;
 xn = randn(size(sig))*PSD*sqrt(fs/2);
 new_sig = sig+xn;
 
 figure('Name','NoisePSD')
-[px_rect,f] = periodogram(new_sig,win_rect,'oneside',nfft,fs);
+[px_rect,f] = periodogram(new_sig,win_rect,'onesided',nfft,fs);
 loglog(f,sqrt(px_rect),'DisplayName','RecWin')
 hold on
 grid on
-[px_hann,f] = periodogram(new_sig,win_hann,'oneside',nfft,fs);
+[px_hann,f] = periodogram(new_sig,win_hann,'onesided',nfft,fs);
 loglog(f,sqrt(px_hann),'DisplayName','HanWin')
-[px_bh,f] = periodogram(new_sig,win_bh,'oneside',nfft,fs);
+[px_bh,f] = periodogram(new_sig,win_bh,'onesided',nfft,fs);
 loglog(f,sqrt(px_bh),'DisplayName','BHWin')
 legend
 xlabel('Frequency (Hz)')
