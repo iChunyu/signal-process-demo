@@ -21,7 +21,7 @@ xlabel('Sample')
 ylabel('Noise (V)')
 
 nfft = length(xn);
-win = hanning(nfft);
+win = hann(nfft);
 [pxn,f] = periodogram(xn,win,'onesided',nfft,fs);
 
 figure('Name','NoisePSD')

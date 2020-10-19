@@ -18,8 +18,9 @@ sig = sin(2*pi*fsig*t);
 
 nfft = length(sig);
 win_rect = rectwin(nfft);
-win_hann = hanning(nfft);
+win_hann = hann(nfft);
 win_bh = blackmanharris(nfft);
+wvtool(win_rect,win_hann,win_bh)
 
 figure('Name','SignalPSD')
 [px_rect,f] = periodogram(sig,win_rect,'onesided',nfft,fs);
