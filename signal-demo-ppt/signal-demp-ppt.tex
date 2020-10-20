@@ -119,21 +119,47 @@
 % =========================  第二节  =========================
 \section{算法实现}
 \begin{frame}{周期图法}
-    \begin{columns}
-        \begin{column}{0.6\textwidth}
-            
-        \end{column}
-        \begin{column}{0.6\textwidth}
-            
-        \end{column}
-    \end{columns}
     \small
     \texttt{[pxx,f] = periodogram(data,window,nfft,fs,'onesided');}
+    \vspace{\fill}
+    \begin{columns}
+        \begin{column}{0.4\textwidth}
+            \centering
+            数据加窗 \\
+            $\downarrow$ \\
+            FFT计算频谱 \\
+            $\downarrow$ \\
+            计算功率谱密度 \\
+            $\downarrow$ \\
+            汇总并绘图
+        \end{column}
+        \begin{column}{0.6\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{periodogram.png}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 \begin{frame}{Welch法}
     \small
     \texttt{[pxx,f] = pwelch(data,window,noverlap,nfft,fs,'onesided');}
+    \vspace{\fill}
+    \begin{columns}
+        \begin{column}{0.4\textwidth}
+            \centering
+            数据等长分段 \\
+            $\downarrow$ \\
+            每段使用周期图法 \\
+            $\downarrow$ \\
+            各段谱密度对应平均 \\
+            $\downarrow$ \\
+            汇总并绘图
+        \end{column}
+        \begin{column}{0.6\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{pwelch.png}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 \begin{frame}{LPSD}
@@ -141,6 +167,23 @@
     \texttt{[pxx,f] = iLPSD(data,fs);}
     \footnote{M. Tröbs, G. Heinzel. Improved Spectrum Estimation from Digitized Time Series on a Logarithmic Frequency Axis. Measurement. 2006.
     }
+    \vspace{\fill}
+    \begin{columns}
+        \begin{column}{0.4\textwidth}
+            \centering
+            构造对数均匀频率点 \\
+            $\downarrow$ \\
+            根据频率分辨率分段 \\
+            $\downarrow$ \\
+            单点DFT并求各段平均 \\
+            $\downarrow$ \\
+            汇总并绘图
+        \end{column}
+        \begin{column}{0.6\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{lpsd.png}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 
