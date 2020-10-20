@@ -1,1 +1,14 @@
 unGit/
+
+# LaTeX
+delete-temp-files.bat
+*.aux
+*.lof
+*.log
+*.lot
+*.out
+*.gz
+*.toc
+*.nav
+*.snm
+
