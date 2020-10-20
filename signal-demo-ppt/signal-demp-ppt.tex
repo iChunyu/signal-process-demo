@@ -4,7 +4,7 @@
 \input{user-package.tex}
 
 \title{功率谱估计及其应用}
-\date{\today}
+\date{2020-10-22}
 \author{肖春雨}
 \institute{华中科技大学}
 
@@ -19,6 +19,7 @@
     \tableofcontents
 \end{frame}
 
+% =========================  第一节  =========================
 \section{理论基础}
 \begin{frame}{功率谱的计算}
     维纳--辛钦定理
@@ -71,38 +72,91 @@
 \end{frame}
 
 
-\begin{frame}{栅栏效应 --- 数字算法的离散本质}
-    
+\begin{frame}{频谱混叠 --- 连续信号的采样失真}
+    \begin{columns}
+        \begin{column}{0.53\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{aliasing.pdf}
+        \end{column}
+        \begin{column}{0.4\textwidth}
+            防止混叠的一般方法
+            \begin{itemize}
+                \item 抗混叠滤波器
+                \item 提高采样率
+            \end{itemize}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 
+\begin{frame}{栅栏效应 --- 数字算法的离散本质}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.8\textwidth]{discrete-data.pdf}
+    \end{figure}
+    减小栅栏效应的一般方法
+    \begin{itemize}
+        \item 增加采样点数
+        \item 有效数据尾部补零
+    \end{itemize}
+\end{frame}
+
+
+\begin{frame}{频率分辨率}
+    频率分辨率：数据连续谱 $X(\j\omega)$ 中能够分辨的最小频率间隔
+
+    计算分辨率：DFT算法所引入的频率间隔（栅栏效应）
+    \begin{figure}
+        \centering
+        \includegraphics[width=\textwidth]{freqs-resolution.pdf}
+    \end{figure}
+    \begin{align*}
+        f_{\rm res} = \frac{1}{T} \qquad \Delta f = \frac{f_s}{N}
+    \end{align*}
+    \footnote{程佩清. 数字信号处理. 第四版. 清华大学出版社. 2013. 185--189.}
+\end{frame}
+
+% =========================  第二节  =========================
 \section{算法实现}
 \begin{frame}{周期图法}
-    
+    \begin{columns}
+        \begin{column}{0.6\textwidth}
+            
+        \end{column}
+        \begin{column}{0.6\textwidth}
+            
+        \end{column}
+    \end{columns}
+    \small
+    \texttt{[pxx,f] = periodogram(data,window,nfft,fs,'onesided');}
 \end{frame}
 
 \begin{frame}{Welch法}
-    
+    \small
+    \texttt{[pxx,f] = pwelch(data,window,noverlap,nfft,fs,'onesided');}
 \end{frame}
 
 \begin{frame}{LPSD}
-    
+    \small
+    \texttt{[pxx,f] = iLPSD(data,fs);}
+    \footnote{M. Tröbs, G. Heinzel. Improved Spectrum Estimation from Digitized Time Series on a Logarithmic Frequency Axis. Measurement. 2006.
+    }
 \end{frame}
 
 
-
+% =========================  第三节  =========================
 \section{实际应用}
-\begin{frame}{频率检测}
+\begin{frame}{功率谱估计实际应用}
     \begin{itemize}
         \item 信号检测
         \item 噪声本底
         \item 系统辨识
     \end{itemize}
+    
+    \hfill\includegraphics[width=0.25\textwidth]{share-code.pdf} \\
+    \hfill\href{https://github.com/iChunyu/signal-process-demo}{\scriptsize https://github.com/iChunyu/signal-process-demo}
+    
 \end{frame}
-
-% \begin{frame}{资源分享}
-
-% \end{frame}
 
 \begin{frame}[standout]
     \zihao{0} 谢\ 谢\ ！
