@@ -26,8 +26,8 @@
     \begin{align*}
         S_x(\omega) &= \int_{-\infty}^{+\infty} R_x(\tau) \e{-\j\omega\tau} \dif \tau \\
         &= \int_{-\infty}^{+\infty} \left( \lim_{T \to \infty} \, \frac{1}{2T} \, \int_{-T}^{T} x(t-\tau)x(t) \dif t   \right) \e{-\j\omega\tau} \dif \tau  \\
-        &= \lim_{T \to \infty} \, \frac{1}{2T} \, \int_{-T}^{T} \int_{-\infty}^{+\infty} x(t)\e{-t} x(t-\tau)\e{-\j\omega(\tau-t)} \dif \tau \dif t \\
-        &= \lim_{T \to \infty} \, \frac{1}{2T} \, \int_{-T}^{T}  x(t)\e{-t} \bar{X}(\j\omega) \dif t \\
+        &= \lim_{T \to \infty} \, \frac{1}{2T} \, \int_{-T}^{T} \int_{-\infty}^{+\infty} x(t)\e{-\j \omega t} x(t-\tau)\e{-\j\omega(\tau-t)} \dif \tau \dif t \\
+        &= \lim_{T \to \infty} \, \frac{1}{2T} \, \int_{-T}^{T}  x(t)\e{-\j \omega t} \bar{X}(\j\omega) \dif t \\
         &= \lim_{T \to \infty} \, \frac{1}{2T} \, \left| X(\j\omega) \right|^2
     \end{align*}
 \end{frame}
@@ -124,7 +124,7 @@
     \vspace{\fill}
     \begin{columns}
         \begin{column}{0.4\textwidth}
-            \centering
+            \centering\normalsize
             数据加窗 \\
             $\downarrow$ \\
             FFT计算频谱 \\
@@ -142,11 +142,11 @@
 
 \begin{frame}{Welch法}
     \small
-    \texttt{[pxx,f] = pwelch(data,window,noverlap,nfft,fs,'onesided');}
+    \texttt{[pxx,f] = pwelch(data,window,noverlap,nfft,fs,'onesided');} 
     \vspace{\fill}
     \begin{columns}
         \begin{column}{0.4\textwidth}
-            \centering
+            \centering\normalsize
             数据等长分段 \\
             $\downarrow$ \\
             每段使用周期图法 \\
@@ -170,7 +170,7 @@
     \vspace{\fill}
     \begin{columns}
         \begin{column}{0.4\textwidth}
-            \centering
+            \centering\normalsize
             构造对数均匀频率点 \\
             $\downarrow$ \\
             根据频率分辨率分段 \\
