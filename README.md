@@ -10,7 +10,7 @@
 
 ## 仓库文件说明
 
-`signal-demo-ppt/` 文件夹下分享了功率谱估计的PPT，该PPT由 $\LaTeX$ 生成，有兴趣的同学可以帮忙在 $\LaTeX$ 源码中添加注释为PPT做解释；
+`signal-demo-ppt/` 文件夹下分享了功率谱估计的PPT，该PPT由 LaTeX 生成，有兴趣的同学可以帮忙在 LaTeX 源码中添加注释为PPT做解释；
 
 `iLPSD.m` 是随仓库赠送的一个功率谱估计函数，其介绍可以参考文献[Improved spectrum estimation from digitized time series on a logarithmic frequency axis](https://www.sciencedirect.com/science/article/abs/pii/S026322410500117X)，也可在 [Issues](https://github.com/iChunyu/signal-process-demo/issues) 页面进行讨论。
 
