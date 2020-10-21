@@ -1,18 +1,22 @@
 % 功率谱估计可以用于评估仪器噪声在频带内的分布，为数据滤波提供依据
 % 示例数据说明：
-%    test-data-01 --- 假设的某录音设备噪声本底
-%    test-data-02 --- 上述录音设备录制的某音频
+%    test-noise --- 假设的某录音设备噪声本底
+%    test-audio --- 上述录音设备录制的某音频
+% 注释了sound函数避免自动播放声音导致音频重叠，手动播放。
+
+% XiaoCY 2020-10-21
 
 %%
 set(groot,'DefaultLineLineWidth',2)
 set(groot,'DefaultAxesFontSize',20)
 set(groot,'DefaultFigureColor','w')
+set(groot,'DefaultFigureWindowStyle','docked')
 
 clear;clc
 close all
 
 %% 导入噪声本底数据
-load('test-data-01.mat')
+load('test-noise.mat')
 
 figure('Name','Noise')
 plot(xn)
@@ -32,7 +36,7 @@ xlabel('Frequency (Hz)')
 ylabel('Power Spectrum (V/Hz^{1/2})')
 
 %% 导入录音数据
-load('test-data-02.mat')
+load('test-audio.mat')
 
 figure('Name','Data')
 plot(data)
