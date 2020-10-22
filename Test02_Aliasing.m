@@ -34,19 +34,19 @@ ylabel('Power Spectrum')
 %% 10倍直接抽取，采样率降为100Hz
 x1 = x0(1:10:end);
 [pxx,f] = iLPSD(x1,fs/10);
-loglog(f,sqrt(pxx),'DisplayName','Dedimate-100Hz')
+loglog(f,sqrt(pxx),'DisplayName','Decimate-100Hz')
 legend('location','southwest')
 
 %% 50倍直接抽取，采样率降为20Hz
 x2 = x0(1:50:end);
 [pxx,f] = iLPSD(x2,fs/50);
-loglog(f,sqrt(pxx),'DisplayName','Dedimate-20Hz')
+loglog(f,sqrt(pxx),'DisplayName','Decimate-20Hz')
 legend('location','southwest')
 
 %% 100倍直接抽取，采样率为10Hz
 x3 = x0(1:100:end);
 [pxx,f] = iLPSD(x3,fs/100);
-loglog(f,sqrt(pxx),'DisplayName','Dedimate-10Hz')
+loglog(f,sqrt(pxx),'DisplayName','Decimate-10Hz')
 legend('location','southwest')
 
 %% 抗混叠滤波后抽取，采样率为10Hz
