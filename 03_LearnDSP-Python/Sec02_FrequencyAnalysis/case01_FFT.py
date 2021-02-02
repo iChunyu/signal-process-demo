@@ -31,7 +31,7 @@ for m in range(1,M+1):
     Nr = Nm//2
     Wm = np.exp(-1j*2*np.pi/Nm)
     Wmk = 1.
-    for n in range(int(Nr)):
+    for n in range(Nr):
         for k in range(n,N,Nm):
             kp = k + Nr
             WX = X[kp] * Wmk
