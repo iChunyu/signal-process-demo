@@ -12,3 +12,5 @@ delete-temp-files.bat
 *.nav
 *.snm
 
+# MATLAB
+*.asv
