@@ -3,7 +3,7 @@ Personal fuction library in Python
 Contents
     (1) pxx,f = lpsd(data,fs,Jdes=1000)
 
-Last Update: 2021-02-04
+Last Update: 2021-02-06
 '''
 
 # %%
@@ -27,7 +27,7 @@ Ref: Improved spectrum estimation from digitized time series on a logarithmic fr
 Remark: Unfamiliar with Python by now, the function doesn't support matrix data by now.
     [MATLAB version supports matrix data.]
 
-XiaoCY 2021-02-04
+XiaoCY 2021-02-06
 '''
 
 # subfuction
@@ -88,7 +88,7 @@ def lpsd(data,fs,Jdes=1000):
         W2 = np.sin(-2*np.pi*m[j]/L[j]*l)
         A = 0.
         for k in range(Kj-1):
-            G = data[k*Dj:k*Dj+int(L[j])]
+            G = data[k*Dj:k*Dj+int(L[j])].copy()
             G = G-np.mean(G)
             G = G*w
             A += np.dot(G,W1)**2 + np.dot(G,W2)**2
