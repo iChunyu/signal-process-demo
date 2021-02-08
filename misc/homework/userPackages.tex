@@ -1,0 +1,95 @@
+% Date format yyyy-mm-dd
+\usepackage{datetime2}
+
+% Page margin
+\usepackage{geometry}
+\geometry{
+    a4paper,
+    left = 2.5cm,
+    right = 2.5cm,
+    bottom = 2.8cm,
+    top = 2.8cm
+}
+
+% Footer and header of page
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\setlength{\headheight}{1.5cm}
+\renewcommand{\headrule}
+{
+    \makebox[0pt][l]{\rule[1.15em]{\textwidth}{0.4pt}}%
+    \rule[1em]{\textwidth}{0.4pt}
+}
+\setlength{\headsep}{1em}
+\renewcommand{\footrulewidth}{0.4pt}
+\lhead{\includegraphics[height=1cm]{HUST-logo.png}}
+\chead{\slshape \centering \small Digital Signal Processing Projects \\ Huazhong University of Science and Technology}
+\rhead{}
+\cfoot{\thepage}
+
+% Table of contents
+\usepackage{tocbibind}						% add bibliography to TOC
+
+% XeLaTeX logo
+\usepackage{metalogo}	
+
+% Color
+\usepackage[table]{xcolor}
+\definecolor{blue}{rgb}{0.1765,0.5216,0.9412}
+\definecolor{red}{rgb}{0.9569,0.2627,0.2353}
+\definecolor{yellow}{rgb}{1.0000,0.7373,0.1961}
+\definecolor{green}{rgb}{0.0392,0.6588,0.3451}
+\definecolor{pink}{rgb}{0.9843,0.4471,0.6000}
+
+% Code style
+\usepackage{listings}
+% \lstset{
+%     basicstyle = \ttfamily,
+%     keywordstyle = \color[rgb]{0.00,0.00,1.00},
+%     commentstyle = \color[rgb]{0.24, 0.46,0.24},
+%     stringstyle = \color[rgb]{0.62,0.12,0.93},
+%     backgroundcolor = \color[rgb]{0.99,0.99,0.86},
+%     frame = single,
+%     numbers = left,
+%     tabsize = 4,
+%     language = Matlab						% default language: MATLAB
+% }
+
+% Optimize footnotemark
+\usepackage[perpage]{footmisc}				% clear count per page
+\usepackage{pifont}							% use number with ciecle
+\renewcommand{\thefootnote}{\ding{\numexpr171+\value{footnote}}}
+
+% Hyperlink
+\usepackage{hyperref}                       % required package
+\hypersetup{hidelinks}                      % hide notations for hyperlink
+% \hypersetup{colorlinks = true}            % use color to show hyperlink
+
+% Math
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{bm}                             % bold fonts
+\usepackage{newtxmath}                      % times now roam font
+\numberwithin{equation}{section}
+
+% SI units
+\usepackage{siunitx}
+
+% Table and figure
+\usepackage{graphicx}                       % figure package
+\usepackage{tabularx}                       % fixed-width table
+\usepackage{multirow}                       % merge row
+\usepackage{booktabs}                       % standard three-line table
+\graphicspath{{./figs/}}
+\numberwithin{figure}{section}
+\numberwithin{table}{section}
+
+% Biolography style
+\usepackage{gbt7714}                        % China standard style
+\bibliographystyle{gbt7714-numerical}       % numerical / author-year
+
+% \ctexset{
+%     section/format = \centering\bfseries\Large,
+%     subsection/format = \raggedright\bfseries\large,
+%     subsubsection/format = \raggedright\bfseries\large
+% } 

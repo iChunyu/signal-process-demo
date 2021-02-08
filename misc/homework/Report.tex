@@ -1,0 +1,54 @@
+\documentclass[UTF8,scheme=plain,linespread=1.5,zihao=-4,fontset=adobe]{ctexart}
+
+\input{userPackages.tex}
+
+\begin{document}
+
+\begin{titlepage}
+    \centering
+    \  % placeholder
+
+    \begin{center}
+        \vspace{\fill}
+        \includegraphics[width=0.8\textwidth]{HUSTBlack.eps}
+
+        \large \scshape Huazhong University of Science and Technology
+    \end{center}
+
+    \vspace{\stretch{0.7}}
+
+    \begin{center}
+        {\Large 数字信号处理}
+
+        {\large (Digital Signal Processing Projects)}
+
+        \vspace{\stretch{0.7}}
+        
+        \large
+        \newcolumntype{Y}{>{\centering\arraybackslash}X}
+        \begin{tabularx}{7cm}{p{2cm}Y}
+            学 \hfill 号： & D201880110 \\ \cline{2-2}
+            姓 \hfill 名： & 肖春雨 \\ \cline{2-2}
+            专 \hfill 业： & 无线电物理 \\ \cline{2-2}
+            院 \hfill 系： & 物理学院 \\ \cline{2-2}
+        \end{tabularx}
+    \end{center}
+
+    \vspace{\stretch{3}}
+
+    \large
+    \includegraphics[width=3cm]{HUST-logo.png} \hspace{\fill} \slshape \today
+\end{titlepage}
+
+\pagenumbering{Roman}
+\tableofcontents
+\clearpage
+
+\pagenumbering{arabic}
+\setcounter{page}{1}	% 正文重新开始于1 
+
+\input{main.tex}
+
+% \bibliography{ref}	% 参考文献列表
+
+\end{document}
