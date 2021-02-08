@@ -28,7 +28,7 @@
 \cfoot{\thepage}
 
 % Table of contents
-\usepackage{tocbibind}						% add bibliography to TOC
+\usepackage{tocbibind}                      % add bibliography to TOC
 
 % XeLaTeX logo
 \usepackage{metalogo}	
@@ -52,12 +52,12 @@
 %     frame = single,
 %     numbers = left,
 %     tabsize = 4,
-%     language = Matlab						% default language: MATLAB
+%     language = Matlab                     % default language: MATLAB
 % }
 
 % Optimize footnotemark
-\usepackage[perpage]{footmisc}				% clear count per page
-\usepackage{pifont}							% use number with ciecle
+\usepackage[perpage]{footmisc}              % clear count per page
+\usepackage{pifont}                         % use number with ciecle
 \renewcommand{\thefootnote}{\ding{\numexpr171+\value{footnote}}}
 
 % Hyperlink
@@ -70,7 +70,7 @@
 \usepackage{amssymb}
 \usepackage{bm}                             % bold fonts
 \usepackage{newtxmath}                      % times now roam font
-\numberwithin{equation}{section}
+% \numberwithin{equation}{section}
 
 % SI units
 \usepackage{siunitx}
@@ -80,9 +80,11 @@
 \usepackage{tabularx}                       % fixed-width table
 \usepackage{multirow}                       % merge row
 \usepackage{booktabs}                       % standard three-line table
+\usepackage{caption}
 \graphicspath{{./figs/}}
-\numberwithin{figure}{section}
-\numberwithin{table}{section}
+% \numberwithin{figure}{section}
+% \numberwithin{table}{section}
+\captionsetup{labelsep=period}
 
 % Biolography style
 \usepackage{gbt7714}                        % China standard style
