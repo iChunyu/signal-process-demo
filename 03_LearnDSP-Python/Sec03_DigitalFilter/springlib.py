@@ -3,7 +3,7 @@ Personal fuction library in Python
 Contents
     (1) pxx,f = lpsd(data,fs,Jdes=1000)
 
-Last Update: 2021-02-06
+Last Update: 2021-02-10
 '''
 
 # %%
@@ -27,7 +27,7 @@ Ref: Improved spectrum estimation from digitized time series on a logarithmic fr
 Remark: Unfamiliar with Python by now, the function doesn't support matrix data by now.
     [MATLAB version supports matrix data.]
 
-XiaoCY 2021-02-06
+XiaoCY 2021-02-10
 '''
 
 # subfuction
@@ -79,19 +79,30 @@ def lpsd(data,fs,Jdes=1000):
     J = len(f)
     pxx = np.zeros(J)
     for j in range(J):
-        Dj = int(np.floor((1-ksai)*L[j]))
-        Kj = int(np.floor((N-L[j])/Dj+1))
+        Dj = np.floor((1-ksai)*L[j])
+        Kj = np.floor((N-L[j])/Dj+1)
         w = np.hanning(L[j])
         C_PSD = 2/fs/np.dot(w,w)
         l = np.arange(0,L[j])
         W1 = np.cos(-2*np.pi*m[j]/L[j]*l)
         W2 = np.sin(-2*np.pi*m[j]/L[j]*l)
-        A = 0.
-        for k in range(Kj-1):
-            G = data[k*Dj:k*Dj+int(L[j])].copy()
+        A = 0.0
+        for k in range(int(Kj)):
+            G = data[int(k*Dj):int(k*Dj+L[j])].copy()
             G = G-np.mean(G)
             G = G*w
             A += np.dot(G,W1)**2 + np.dot(G,W2)**2
         pxx[j] = A/Kj*C_PSD
 
     return pxx,f
+
+if __name__ =='__main__':
+    fs = 10
+    x = np.random.randn(1000)*np.sqrt(fs/2)
+    pxx,f = lpsd(x,fs)
+
+    plt.figure
+    plt.loglog(f,np.sqrt(pxx))
+    plt.grid()
+    plt.xlabel('Frequency (Hz)')
+    plt.ylabel(r'PSD ($\rm*/\sqrt{Hz}$)')
