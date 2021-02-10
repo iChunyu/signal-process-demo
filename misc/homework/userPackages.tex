@@ -23,7 +23,7 @@
 \setlength{\headsep}{1em}
 \renewcommand{\footrulewidth}{0.4pt}
 \lhead{\includegraphics[height=1cm]{HUST-logo.png}}
-\chead{\slshape \centering \small Digital Signal Processing Projects \\ Huazhong University of Science and Technology}
+\chead{\slshape \centering \zihao{5} Digital Signal Processing Projects \\ Huazhong University of Science and Technology}
 \rhead{}
 \cfoot{\thepage}
 
@@ -43,17 +43,17 @@
 
 % Code style
 \usepackage{listings}
-% \lstset{
-%     basicstyle = \ttfamily,
-%     keywordstyle = \color[rgb]{0.00,0.00,1.00},
-%     commentstyle = \color[rgb]{0.24, 0.46,0.24},
-%     stringstyle = \color[rgb]{0.62,0.12,0.93},
-%     backgroundcolor = \color[rgb]{0.99,0.99,0.86},
-%     frame = single,
-%     numbers = left,
-%     tabsize = 4,
-%     language = Matlab                     % default language: MATLAB
-% }
+\lstset{
+    basicstyle = \zihao{5}\ttfamily,
+    keywordstyle = \color[rgb]{0.00,0.00,1.00},
+    commentstyle = \color[rgb]{0.24, 0.46,0.24},
+    stringstyle = \color[rgb]{0.62,0.12,0.93},
+    frame = single,
+    numbers = left,
+    tabsize = 4,
+    breaklines = true,
+    showstringspaces = false
+}
 
 % Optimize footnotemark
 \usepackage[perpage]{footmisc}              % clear count per page
@@ -90,8 +90,5 @@
 \usepackage{gbt7714}                        % China standard style
 \bibliographystyle{gbt7714-numerical}       % numerical / author-year
 
-% \ctexset{
-%     section/format = \centering\bfseries\Large,
-%     subsection/format = \raggedright\bfseries\large,
-%     subsubsection/format = \raggedright\bfseries\large
-% } 
+\usepackage{indentfirst}
+\setlength{\parindent}{2em}
