@@ -7,28 +7,90 @@ Fourier series (FS) gives a new idea to expand a continuous and periodic signal 
 Analysis in frequency domain provides more options to process signals or evaluate linear systems. For example, a spectrum given by fast Fourier transform (FFT, the fast algorithm for DFT) shows the frequency distribution of the signal; the location of poles and zeros of a system demonstrate the stability and dynamic properties.
 
 
-In this report, attentions are paid to digital signal processing. Power spectrum density (PSD) is firstly introduced as a tool for frequency analysis and a new algorithm is delivered. Then the design and properties of some common used filters are discussed. Finally, an example is given to show processing procedure and the results.
+In this report, attentions are paid to digital signal processing. Power spectrum density is firstly introduced as a tool for frequency analysis and a new algorithm is delivered. Then the design and properties of some common used filters are discussed. Finally, an example is given to show processing procedure and the results.
 
 
-\section{Power Spectrum Density} \label{sec:psd}
+
+
+\section{Power Spectrum Density}
+
+
+DFT is used to analysis a certain signal. However, there are many kinds of stochastic signals whose statistical properties are the most concerned. As for a stationary and random signal, power spectrum density (PSD) is taken to estimate its properties in frequency domain.
+
+
+PSD is defined as the Fourier transform of the autocorrelation function of the given signal $x(t)$
+\begin{equation}
+    S_x(\omega) = \mathscr{F}\left(R_{xx}(\tau)\right) = \int_{-\infty}^{+\infty} R_{xx}(\tau) \iexp{-\mathrm{j} 2 \uppi \omega \tau} \diff \tau
+\end{equation}
+where the autocorrelation function $R_{xx}(\tau)$ is 
+\begin{equation}
+    R_{xx}(\tau) = \lim_{T\to \infty} \frac{1}{2T}\int_{-T}^{T} x(t) x(t-\tau)  \diff t
+\end{equation}
+Thus, the PSD is computed by
+\begin{align}
+    S_x(\omega) &= \int_{-\infty}^{+\infty} \left(\lim_{T\to \infty} \frac{1}{2T}\int_{-T}^{T} x(t) x(t-\tau)  \diff t t\right) \iexp{-\mathrm{j} 2 \uppi \omega} \diff \tau \notag \\ 
+    &= \lim_{T\to \infty} \frac{1}{2T} \int_{-T}^{T} x(t)\iexp{-\mathrm{j} 2 \uppi \omega t} \left( \int_{-\infty}^{+\infty} x(t-\tau) \iexp{-\mathrm{j} 2 \uppi \omega \left(\tau-t\right)} \right) \diff t \notag \\
+    &= \lim_{T\to \infty} \frac{1}{2T} \int_{-T}^{T} x(t)\iexp{-\mathrm{j} 2 \uppi \omega t} X^*(\jomega) \diff t \notag \\
+    &= \lim_{T\to \infty} \frac{1}{2T} X(\jomega) X^*(\jomega) \notag \\
+    &= \lim_{T\to \infty} \frac{1}{2T} \left| X(\jomega) \right|^2
+        \label{eq:psd}
+\end{align}
+Eq~\eqref{eq:psd} is also known as Wiener–Khinchin theorem, which demonstrate the relationship between PSD and general frequency spectrum.
+
+
+
+
 \subsection{Classical Spectrum Estimation}
+
+
+Analog signals are analyzed based on the sampled data. Two important effects should be considered in sampling: (1) sampling should satisfy Nyquist sampling theorem, where the sampling frequency should be at least twice the maximum frequency of the origin signal. In practice, an analog anti-aliasing filter is usually used before the signal is sampled. (2) Finite sampling is equivalent to applying a window function to the infinite signal, which leads to frequency leakage effect. Because of these two effects, the PSD computed from the sampled data is just the estimation of the PSD of origin analog signal. That's why we usually say `spectrum estimation' instead of `spectrum calculation'.
+
+
+The most direct method to estimate PSD is to discretize Eq~\eqref{eq:psd} using DFT and cancel the limit as below.
+\begin{equation}
+    S_x(\omega) \approx \frac{1}{T} \left| X(k) \right|^2 = \frac{1}{Nf_s} \left| X(k) \right|^2
+\end{equation}
+where $T$ is the total time of data, $N$ is the total number of points, $f_s$ is the sampling frequency. $X(k)$ is the DFT of $x(n)$, given by
+\begin{equation}
+    X(k) = \sum_{n=0}^{N-1} x(n) \iexp{-\mathrm{j} 2 \uppi \frac{n}{N}k}
+\end{equation}
+
+
 \subsection{LPSD Algorithm}
 
-\section{Filter Design} \label{sec:filter}
+
+
+
+
+\section{Filter Design}
+
+
+
+
+
 \subsection{Common Used Filters}
 % continus/discrete, FIR/IIR
 % butter/... (functions)
+
+
+
 
 \subsection{Zero-Phase Filtering}
 % phase compensator
 % flip/filter...
 
+
+
+
 \section{Results}
 % example
 
+
+
+
 \section{Conclusions}
 
-Text
+
 
 
 
