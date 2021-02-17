@@ -54,16 +54,16 @@ where $T$ is the total time of data, $N$ is the total number of points, $f_s$ is
 \begin{equation}
     X(k) = \sum_{n=0}^{N-1} x(n) \iexp{-\mathrm{j} 2 \uppi \frac{n}{N}k} \label{eq:DFT}
 \end{equation}
-In the case where a window function $w(n)$ is applied to the sampled data, the PSD should be normalized as below.
+In the case where a window function $w(n)$ is applied to the sampled data, the PSD should be normalized as below. The $2$ in the numerator converts the two-sided PSD to one-sided PSD, whose square root is the most used in practice.
 \begin{equation}
-    S_x(\omega) = \frac{1}{\sum_{n=0}^{N-1} w^2(n) f_s} \left| X(k) \right|^2 \label{eq:periodogram}
+    S_x(\omega) = \frac{2}{\sum_{n=0}^{N-1} w^2(n) f_s} \left| X(k) \right|^2 \label{eq:periodogram}
 \end{equation}
 
 
-PSD can be estimated by combining Eq~\eqref{eq:DFT} and Eq~\eqref{eq:periodogram}. This direct method is called `periodogram'. Both MATLAB and Python provide built-in function to calculate the periodogram named respectively \verb|periodogram| and \verb|scipy.signal.periodogram|. 
+PSD can be estimated by combining Eq~\eqref{eq:DFT} and Eq~\eqref{eq:periodogram}. This direct method is called `periodogram'. Both MATLAB and Python provide built-in functions to calculate the periodogram. They are named \verb|periodogram| and \verb|scipy.signal.periodogram|. 
 
 
-An example for PSD estimation is shown in Fig~\ref{fig:plotPSD}. The result of periodogram looks very noisy, especially in high frequency band. To improve the accuracy of the estimation, Welch proposed a method to estimate PSD by dividing the data into overlapped segments and computing the average of the periodogram of each segment.
+An example for PSD estimation is shown in Fig~\ref{fig:plotPSD}. The result of periodogram looks very noisy, especially in high frequency band. To improve the accuracy, Welch proposed a method by dividing the data into overlapped segments and computing the average of the periodogram of each segment.
 
 
 \begin{figure}[!htb]
@@ -85,6 +85,75 @@ The idea of Welch's method is shown in Fig~\ref{fig:Welch} and the relevant func
 As shown in Fig~\ref{fig:plotPSD}, by averaging PSD using Welch's method, the curve is less noisy. However, because the data is divided into segments, the length decreases, which decreases the frequency resolution. To further improve Welch's method, a new method named Logarithmic frequency axis Power Spectral Density (LPSD) was proposed \cite{trobsImprovedSpectrumEstimation2006}.
 
 
+Considering that most signals occupy a wideband in frequency domain, the PSD is usually plotted with a logarithmic axis. Thus, the basic idea of LPSD is to construct logarithmic frequency axis rather than linear axis. As a consequence, the frequency resolution changes with frequency, which allows dividing data into different segments. That is to say, the LPSD algorithm succeeds the idea of Welch's method and divides data according to the frequency point at which the PSD is estimated. The detailed procedure of the algorithm is discussed hereafter.
+
+
+A logarithmic axis is made up of geometric progression, the length of which is assumed to be $J_{\rm des}$ and can be set manually, and it's not necessary equal to the length of data, $N$. The common ratio $q$ and ideal frequency resolution can be calculated as below.
+\begin{gather}
+    \lg f_{\rm max} - \lg f_{\rm min} = q\left(J_{\rm des} -1 \right) \quad \Rightarrow \quad q = \left(\frac{f_{\rm max}}{f_{\rm min}}\right)^{\frac{1}{J_{\rm des} -1}} = \left(\frac{N}{2}\right)^{\frac{1}{J_{\rm des} -1}} \\
+    r_0(j) = f(j+1) - f(j) = \left(q-1\right) f(j)
+    \label{eq:r0}
+\end{gather}
+Note that the maximum frequency is given by Nyquist frequency $f_{\rm max} = \frac{f_s}{2}$, and the minimum frequency is limited by the total sampling time $f_{\rm min} = \frac{1}{T} = \frac{f_s}{N}$. The index is denoted as $j$, which shows that the resolutions differ between frequencies.
+
+
+However, the ideal frequency resolution $r_0(j)$ could be less than $f_{\rm min}$, which is not meaningful. So the resolution should be adjusted. To do so, we assume the desired number of segments to be $K_{\rm des}$, and the overlap ratio is $\xi$. So the desired resolution can be computed according to Fig~\ref{fig:Welch}.
+\begin{gather}
+    \left(K_{\rm des}-1\right) \left(1-\xi\right) L_{\rm des} + L_{\rm des} = N \\
+    r_{\rm des} = \frac{f_s}{L_{\rm des}} = \frac{f_s}{N}\left(\left(K_{\rm des}-1\right) \left(1-\xi\right)+1\right)
+\end{gather}
+The ideal frequency resolution should be adjusted as below.
+\begin{equation}
+    r'(j) = \begin{cases}
+        r_0(j) & r_0(j) \ge r_{\rm des} \\
+        \sqrt{r_0(j)r_{\rm des}} & r_0(j) < r_{\rm des} \text{ and } \sqrt{r_0(j)r_{\rm des}} > f_{\rm min}  \\
+        f_{\rm min} & \text{ else }
+       \end{cases}  \label{eq:rp}
+\end{equation}
+Besides, the frequency resolution should consider an integer length of data and be further modified.
+\begin{equation}
+    L(j) = \left\lfloor \frac{f_s}{r'(j)} \right\rfloor \quad \Rightarrow \quad r(j) = \frac{f_s}{L_(j)} \label{eq:r}
+\end{equation}
+So far, the logarithmic frequencies can be computed by iterations given by Eq~\eqref{eq:r0}, Eq~\eqref{eq:rp} and Eq~\eqref{eq:r}. 
+
+
+Similar to the Welch's method, $D$ and $L$ in Fig~\ref{fig:Welch} differ with index $j$. For $j$-th frequency point, 
+\begin{equation}
+    D(j) = \left\lfloor \left( 1-\xi \right) L(j) \right\rfloor
+\end{equation}
+and the number of segments is computed below.
+\begin{equation}
+    K(j) = \left\lfloor \frac{N-L(j)}{D(j)+1} \right\rfloor
+\end{equation}
+
+
+Average is usually deducted in PSD estimation. The average of $j$-th frequency point and $k$-th segment is given below.
+\begin{equation}
+    a(j,k) = \frac{1}{L(j)} \sum_{l=1}^{L(j)} x(D(j)(k-1)+l)
+\end{equation}
+Deducting the average and applying window function $w(j,l)$, the segment to be transformed is gained.
+\begin{equation}
+    G(j,k,l) = \big( x(D(j)(k-1)+l) - a(j,k) \big) w(j,l)
+\end{equation}
+The PSD of $k$-th segment at frequency $f(j)$ is calculated by single point DFT as below.
+\begin{equation}
+    A(j,k) = \sum_{l=1}^{L(j)} G(j,k,l) \iexp{-\mathrm{j} 2 \uppi \frac{m(j)}{L(j)} l}
+\end{equation}
+Note that the frequency index $m(j)=\frac{f(j)}{r(j)}$ is not necessary to be an integer.
+
+
+Finally, the PSD at $j$-th frequency point is given by the average of $K(j)$ segments according to Wiener–Khinchin theorem.
+\begin{equation}
+    P(j) = \frac{C_{\rm PSD}(j)}{K(j)} \sum_{k=1}^{K(j)} \left| A(j,k) \right|^2
+\end{equation}
+The coefficient $C_{\rm PSD}(j)$ is used to normalize the PSD, which is given below.
+\begin{equation}
+    C_{\rm PSD}(j) = \frac{2}{f_s\sum_{l=1}^{L(j)} w^2(j,l)}
+\end{equation}
+
+
+The complete procedure of the LPSD algorithm has been discussed. The function is realized in both Python and MATLAB code, which can be found in the appendix. A comparison is given in Fig~\ref{fig:plotPSD}. The signal is obtained by filtering a white noise with elliptic filter so that the PSD should be equal to the gain of the transfer function theoretically.
+
 
 \begin{figure}[!htb]
     \centering
@@ -93,6 +162,8 @@ As shown in Fig~\ref{fig:plotPSD}, by averaging PSD using Welch's method, the cu
     \label{fig:plotPSD}
 \end{figure}
 
+
+It's obvious that both the periodogram and the LPSD algorithms can calculate PSD at minimum frequency limited by the sampling time. But the result of periodogram is the most noisy. Welch's method improves the accuracy but sacrifices the minimum frequency. The LPSD provides the best estimated PSD, the result of which is very close to the theoretical value. However, the cost of the LPSD is to spend more time for calculation because it cannot benefit from FFT.
 
 \section{Filter Design}
 
