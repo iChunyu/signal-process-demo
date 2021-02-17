@@ -40,7 +40,7 @@ Eq~\eqref{eq:psd} is also known as Wiener–Khinchin theorem, which demonstrate 
 
 
 
-\subsection{Classical Spectrum Estimation}
+\subsection{Classical Power Spectrum Density Estimation}
 
 
 Analog signals are analyzed based on the sampled data. Two important effects should be considered in sampling: (1) sampling should satisfy Nyquist sampling theorem, where the sampling frequency should be at least twice the maximum frequency of the origin signal. In practice, an analog anti-aliasing filter is usually used before the signal is sampled. (2) Finite sampling is equivalent to applying a window function to the infinite signal, which leads to frequency leakage effect. Because of these two effects, the PSD computed from the sampled data is just the estimation of the PSD of origin analog signal. That's why we usually say `spectrum estimation' instead of `spectrum calculation'.
@@ -52,14 +52,46 @@ The most direct method to estimate PSD is to discretize Eq~\eqref{eq:psd} using 
 \end{equation}
 where $T$ is the total time of data, $N$ is the total number of points, $f_s$ is the sampling frequency. $X(k)$ is the DFT of $x(n)$, given by
 \begin{equation}
-    X(k) = \sum_{n=0}^{N-1} x(n) \iexp{-\mathrm{j} 2 \uppi \frac{n}{N}k}
+    X(k) = \sum_{n=0}^{N-1} x(n) \iexp{-\mathrm{j} 2 \uppi \frac{n}{N}k} \label{eq:DFT}
+\end{equation}
+In the case where a window function $w(n)$ is applied to the sampled data, the PSD should be normalized as below.
+\begin{equation}
+    S_x(\omega) = \frac{1}{\sum_{n=0}^{N-1} w^2(n) f_s} \left| X(k) \right|^2 \label{eq:periodogram}
 \end{equation}
 
 
-\subsection{LPSD Algorithm}
+PSD can be estimated by combining Eq~\eqref{eq:DFT} and Eq~\eqref{eq:periodogram}. This direct method is called `periodogram'. Both MATLAB and Python provide built-in function to calculate the periodogram named respectively \verb|periodogram| and \verb|scipy.signal.periodogram|. 
+
+
+An example for PSD estimation is shown in Fig~\ref{fig:plotPSD}. The result of periodogram looks very noisy, especially in high frequency band. To improve the accuracy of the estimation, Welch proposed a method to estimate PSD by dividing the data into overlapped segments and computing the average of the periodogram of each segment.
+
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Welch.pdf}
+    \caption{The idea of Welch's method to estimate PSD.}
+    \label{fig:Welch}
+\end{figure}
+
+
+The idea of Welch's method is shown in Fig~\ref{fig:Welch} and the relevant functions are \verb|pwelch| in MATLAB and \verb|scipy.signal.welch| in Python. 
 
 
 
+
+\subsection{Logarithmic Frequency Axis Power Spectral Density}
+
+
+As shown in Fig~\ref{fig:plotPSD}, by averaging PSD using Welch's method, the curve is less noisy. However, because the data is divided into segments, the length decreases, which decreases the frequency resolution. To further improve Welch's method, a new method named Logarithmic frequency axis Power Spectral Density (LPSD) was proposed \cite{trobsImprovedSpectrumEstimation2006}.
+
+
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.7\textwidth]{plotPSD.pdf}
+    \caption{Comparison of three methods to estimate PSD.}
+    \label{fig:plotPSD}
+\end{figure}
 
 
 \section{Filter Design}
