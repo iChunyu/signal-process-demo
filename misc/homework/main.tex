@@ -177,8 +177,6 @@ Properties of a given signal in frequency domain can be obtained from its PSD. T
 
 
 \subsection{Common Used Filters}
-% continus/discrete, FIR/IIR
-% butter/... (functions)
 
 
 Since filter design has been a very proven technique, the theoretical analysis won't go far but some useful functions in MATLAB and Python will be introduced. Dynamic of an analog filter can be described in a differential function or a transfer function with Laplace transform as below.
@@ -238,21 +236,41 @@ Comparison of four common used filters are shown in Fig~\ref{fig:filters} with o
 \end{figure}
 
 
-As has been mentioned, functions mentioned above can also be used to design digital filters. Besides, some methods such as `impulse invariance' and `bilinear' can be used to discretize an analog filter.
+As has been mentioned, functions mentioned above can also be used to design digital filters. Besides, some methods such as `impulse invariance' and `bilinear' can be used to discretize an analog filter. Take an analog Butterworth low-pass filter for example, the discretized filter response is shown in Fig~\ref{fig:filter-c2d}. Note that the discretization could lead to aliasing effects, which may change the behaviors of the filter.
 
 
 \begin{figure}[!htb]
     \centering
     \includegraphics[width=0.6\textwidth]{filter-c2d.pdf}
-    \caption{Filter design discretization.}
+    \caption{Digital filter design by discretization.}
     \label{fig:filter-c2d}
 \end{figure}
 
 
+Digital systems have a unique property which allows all-zero system to exist. These systems are described in difference equation or transfer function with Z transform as below.
+\begin{gather}
+    y(n) = b_0 u(n) + b_1 u(n-1) + \cdots + b_m u(n-m) 
+     \sum_{k=0}^{m} b_k u(n-k) \\
+    H(z) = \frac{Y(z)}{U(z)} = b_0 + b_1 z^{-1} + \cdots + b_m z^{-m} = \sum_{k=0}^{m} b_k z^{-m}
+\end{gather}
+The impulse response in time domain of this all-zero system is finite, thus this kind of filter is call FIR filter for short. Without poles, FIR filter is always stable.
+
+
+Two methods are generally used to design a FIR filter. One is base on window function, whose idea is to apply a certain window function to the response of an IIR filter. MATLAB provides \verb|fir1| function to realize this design. For Python, the function is \verb|scipy.signal.firwin|.
+
+
+Another method for FIR filter design is based on the frequency sample, where only filter order, frequencies and target responses are necessary. The function is named \verb|fir2| in MATLAB and \verb|scipy.signal.firwin2| in Python.
+
+
+FIR filter is easy to realize in digital device while IIR filter has less order. Filter type should be selected according to the requirements and equipment constraints before it is designed. Design results should be checked, including stability, frequency response. Besides, for real-time applications, the filter must be causal.
+
+
+
 
 \subsection{Zero-Phase Filtering}
-% phase compensator
-% flip/filter...
+
+
+
 
 
 
