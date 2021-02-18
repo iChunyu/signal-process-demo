@@ -256,10 +256,13 @@ Digital systems have a unique property which allows all-zero system to exist. Th
 The impulse response in time domain of this all-zero system is finite, thus this kind of filter is call FIR filter for short. Without poles, FIR filter is always stable.
 
 
-Two methods are generally used to design a FIR filter. One is base on window function, whose idea is to apply a certain window function to the response of an IIR filter. MATLAB provides \verb|fir1| function to realize this design. For Python, the function is \verb|scipy.signal.firwin|.
+Two methods are generally used to design a FIR filter. The first one is base on window function, whose idea is to apply a certain window function to the response of an IIR filter. MATLAB provides \verb|fir1| function to realize this design. For Python, the function is \verb|scipy.signal.firwin|.
 
 
 Another method for FIR filter design is based on the frequency sample, where only filter order, frequencies and target responses are necessary. The function is named \verb|fir2| in MATLAB and \verb|scipy.signal.firwin2| in Python.
+
+
+Applications with graphical user interface (GUI) are also available for filter design. They are \verb|filterBuilder| or \verb|filterDesigner| (or \verb|fdatool| in old version) in MATLAB and \verb|pyfdax| in Python.
 
 
 FIR filter is easy to realize in digital device while IIR filter has less order. Filter type should be selected according to the requirements and equipment constraints before it is designed. Design results should be checked, including stability, frequency response. Besides, for real-time applications, the filter must be causal.
@@ -270,6 +273,33 @@ FIR filter is easy to realize in digital device while IIR filter has less order.
 \subsection{Zero-Phase Filtering}
 
 
+The dynamic of the filter always leads to delay. To decrease the delay, an all-pass filter can be employed to adjust the phase response of the filter. As for sampled data, a technology name zero-phase filtering can be used. For digital filter with transfer function $H(z)$, there are four steps to realize zero-phase filtering.
+\begin{enumerate}[\indent Step (1)]
+    \setlength{\itemsep}{0pt}
+    \item Filter: $X(z) \rightarrow H(z)X(z)$ ;
+    \item Reverse: $H(z)X(z) \rightarrow H(z^{-1})X(z^{-1})$ ;
+    \item Filter: $H(z^{-1})X(z^{-1}) \rightarrow H(z)H(z^{-1})X(z^{-1})$ ;
+    \item Reverse: $H(z)H(z^{-1})X(z^{-1}) \rightarrow H(z^{-1})H(z)X(z)$.
+\end{enumerate}
+The transfer function of the complete process $G(z)$ can be calculated as below.
+\begin{equation}
+    G(z) = H(z^{-1})H(z) = \left| H(\omega) \right| \iexp{\mathrm{j} \varphi (\omega)} \left| H(\omega) \right| \iexp{-\mathrm{j} \varphi (\omega)}  = \left| H(\omega) \right|^2
+\end{equation}
+There is no imaginary part in the transfer function so that no delay is introduced. From a practical point of view, when the data is reversed and filtered again, the same delay is introduced but in an opposite direction. Thus, the delay from the first filtering is compensated by the second filtering.
+
+
+The function \verb|filter| in MATLAB or \verb|scipy.signal.lfilter| in Python can be used to filter data with specified filter. To apply zero-phase filtering, the function to be called is \verb|filtfilit| in MATLAB or \verb|scipy.signal.filtfilt| in Python. 
+
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.6\textwidth]{ZeroPhaseFiltering.pdf}
+    \caption{Comparison of normal filtering and zero-phase filtering.}
+    \label{fig:zerofiltering}
+\end{figure}
+
+
+A comparison of normal filtering and zero-phase filtering is shown in Fig~\ref{fig:zerofiltering}. The delay of normal filtering is obvious. Attentions should also be paid to the transient performances. There is transient dynamic in the beginning due to the error of initial states. However, there is also transient dynamic in the end with zero-phase filtering, which is caused by the filtering of the reversed data at the third step. Unfortunately, zero-phase filtering is not causal, which means it cannot be used in real-time applications.
 
 
 
