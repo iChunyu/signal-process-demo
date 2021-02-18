@@ -27,8 +27,8 @@ x = x1+x2+x3+x4+xn
 #%% design IIR filter
 Wp = 110./(fs/2)             # passband corner frequency (normalized)
 Ws = 130./(fs/2)             # stopband corner frequency (normalized)
-Rp = 1.                     # passband ripple (dB)
-Rs = 60.                    # stopband attenuation (dB)
+Rp = 1.                      # passband ripple (dB)
+Rs = 60.                     # stopband attenuation (dB)
 
 Nz,Wn = signal.cheb2ord(Wp,Ws,Rp,Rs)
 b,a = signal.cheby2(Nz,Rs,Wn)

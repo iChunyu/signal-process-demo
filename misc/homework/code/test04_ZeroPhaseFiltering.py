@@ -14,7 +14,7 @@ fs = 500.
 t = np.arange(0,5,1/fs)
 x0 = np.cos(2*np.pi*t)+0.2*np.sin(2*np.pi*10*t)     # origin signal
 
-#%% forward prediction
+#%%
 N,Wn = sig.ellipord(3/(fs/2),5/(fs/2),1,40)
 b,a = sig.ellip(N,1,40,Wn)
 
