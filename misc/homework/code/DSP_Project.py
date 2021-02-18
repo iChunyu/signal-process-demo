@@ -74,6 +74,7 @@ plt.grid()
 plt.legend()
 plt.xlabel('Frequency (Hz)')
 plt.ylabel(r'Signal ($\rm A/\sqrt{Hz}$)')
+plt.xlim(0,fs/2)
 if savepdf:
     plt.savefig('prjPSD.pdf')
 plt.show()

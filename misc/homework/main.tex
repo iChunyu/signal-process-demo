@@ -306,7 +306,47 @@ A comparison of normal filtering and zero-phase filtering is shown in Fig~\ref{f
 
 
 \section{Results}
-% example
+
+
+Due to nonlinear properties, the AC current or voltage from the \SI{50}{Hz} power supply is polluted by some harmonic frequencies. To ensure the filter suppress the noise adequately, a simulation has been done whose input signal is listed in Tab~\ref{tab:input}.
+
+
+\begin{table}[!htb]
+    \centering
+    \caption{Input signal for filter validation}
+    \label{tab:input}
+    \begin{tabular}{llllll}
+        \toprule
+        Frequency (\si{Hz}) & $50$ & $100$ & $150$ & $250$ & White Noise \\
+        Amplitude (\si{A}) & $1.0$ & $0.3$ & $0.2$ & $0.1$ & $0.05$ (RMS) \\
+        Phase (\si{deg}) & $0$ & $60$ & $-60$ & $-90$ & --- \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+
+The length of data is $N=1000$ with sampling frequency $f_s=\SI{1}{kHz}$. The target is to filter out components with frequency above \SI{150}{Hz}. A Chebyshev Type II digital filter is chosen because IIR filter has less order and Chebyshev Type II provides flat frequency within passband. By Specifying $f_{\rm pass} = \SI{110}{Hz}$, $f_{\rm stop} = \SI{130}{Hz}$, $R_{\rm pass} = \SI{1}{dB}$ and $R_{\rm stop} = \SI{60}{dB}$, the designed filter is shown in Fig~\ref{fig:prjFilter}.
+
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.6\textwidth]{prjFilter.pdf}
+    \caption{Filter frequency response.}
+    \label{fig:prjFilter}
+\end{figure}
+
+
+\begin{figure}[!htb]
+    \centering
+    \subcaptionbox{Signals in time domain.}{\includegraphics[height=4.9cm]{prjSignal.pdf}}
+    \hfill
+    \subcaptionbox{Signals in frequency domain.}{\includegraphics[height=4.9cm]{prjPSD.pdf}}
+    \caption{Comparison of original and filtered signal.}
+    \label{fig:prjSignals}
+\end{figure}
+
+
+Original signal is compared with filtered signal in Fig~\ref{fig:prjSignals} in both time and frequency domain. The zero-phase filtering technology was employed so that no delay is introduced. Because the high-frequency disturbances are removed, the filtered curve seems more smooth. For the PSD, it's obvious that the filter suppress high-frequency noise by about three orders of magnitude as stopband attenuation is set to \SI{60}{dB}.
 
 
 
@@ -314,6 +354,4 @@ A comparison of normal filtering and zero-phase filtering is shown in Fig~\ref{f
 \section{Conclusions}
 
 
-
-
-
+% Power spectrum density and filter design have been discussed in this report. The former one is a powerful tool to analyze signal in frequency domain while the later one includes a large class of filters and their applications.
