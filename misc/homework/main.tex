@@ -157,16 +157,21 @@ The complete procedure of the LPSD algorithm has been discussed. The function is
 
 \begin{figure}[!htb]
     \centering
-    \includegraphics[width=0.7\textwidth]{plotPSD.pdf}
+    \includegraphics[width=0.6\textwidth]{plotPSD.pdf}
     \caption{Comparison of three methods to estimate PSD.}
     \label{fig:plotPSD}
 \end{figure}
 
 
-It's obvious that both the periodogram and the LPSD algorithms can calculate PSD at minimum frequency limited by the sampling time. But the result of periodogram is the most noisy. Welch's method improves the accuracy but sacrifices the minimum frequency. The LPSD provides the best estimated PSD, the result of which is very close to the theoretical value. However, the cost of the LPSD is to spend more time for calculation because it cannot benefit from FFT.
+It's obvious that both the periodogram and the LPSD algorithms can calculate PSD at minimum frequency limited by the sampling time. But the result of periodogram is the most noisy. Welch's method improves the accuracy but sacrifices the minimum frequency. The LPSD provides the best estimated PSD, the result of which is very close to the theoretical value. However, the cost of the LPSD is to spend more time for calculation because it uses single point DFT and cannot benefit from FFT.
+
+
+
 
 \section{Filter Design}
 
+
+Properties of a given signal in frequency domain can be obtained from its PSD. To change these properties, a filter with certain frequency response should be applied to the signal. 
 
 
 
@@ -175,6 +180,73 @@ It's obvious that both the periodogram and the LPSD algorithms can calculate PSD
 % continus/discrete, FIR/IIR
 % butter/... (functions)
 
+
+Since filter design has been a very proven technique, the theoretical analysis won't go far but some useful functions in MATLAB and Python will be introduced. Dynamic of an analog filter can be described in a differential function or a transfer function with Laplace transform as below.
+\begin{gather}
+    y^{(n)} + a_1 y^{(n-1)} + \cdots + a_n y = b_0 u^{(m)} + b_1 u^{(m-1)} + \cdots + b_m u \quad (m < n) \\
+    H(s) = \frac{Y(s)}{U(s)} = \frac{b_0 s^{m} + b_1 s^{m-1} + \cdots + b_n}{s^{n} + a_1 s^{n-1} + \cdots + a_n} \quad (m < n)
+\end{gather}
+If there are poles in the transfer function, the filter would have infinite impulse response in time domain, for which we call it IIR filter for short.
+
+
+To design a filter with built-in functions, properties of the filter shown in Fig~\ref{fig:filterdesign} should be specified. Taking low-pass filters as example, the frequency of passband is denoted by $f_{\rm pass}$ and $R_{\rm pass}$ is the allowed ripple. Stopband frequency is $f_{\rm stop}$ and the attenuation is $R_{\rm stop}$.
+
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.5\textwidth]{FilterDesign.pdf}
+    \caption{Filter properties specification.}
+    \label{fig:filterdesign}
+\end{figure}
+
+
+Some common used filters are listed in Tab~\ref{tab:filterdesign} with MATLAB built-in functions for filter design. In these functions, \verb|Wp| and \verb|Ws| are respectively the angular frequency of passband and stopband ($\omega_p = 2 \uppi f_{\rm pass}$ for example). Passband ripple \verb|Rp| and stopband attenuation \verb|Rs| are described in decibels. With the option \verb|'s'|, the function designs an analog filter. If a digital filter is desired, functions should be called without the option \verb|'s'| and \verb|Wp| and \verb|Ws| should be the digital frequency which is normalized by the sampling frequency.
+
+
+For Python users, there are functions with the same names in \verb|scipy.signal| package. If the package is imported by \verb|import scipy.signal as signal|, a prefix \verb|signal.| should be attached to the functions to be called. Besides, the programming rules also has to be noticed. For example, the command \verb|[b,a]=butter(n,Wn,'s')| in MATLAB is equivalent to the command \verb|b,a=signal.butter(n,Wn,analog=True)| in Python.
+
+
+\begin{table}[!htb]
+    \centering
+    \caption{MATLAB built-in functions for IIR filter design}
+    \label{tab:filterdesign}
+    \begin{tabular}{ll}
+        \toprule
+        Name & Built-in Functions  \\
+        \midrule 
+        Butterworth & \verb|[n,Wn] = buttord(Wp,Ws,Rp,Rs,'s');|        \\
+                    & \verb|[b,a] = butter(n,Wn,'s');|                 \\
+        Chebyshev Type I & \verb|[n,Wn] = cheb1ord(Wp,Ws,Rp,Rs,'s');|  \\
+                    & \verb|[b,a] = cheby1(n,Rp,Wn,'s');|              \\
+        Chebyshev Type II & \verb|[n,Wn] = cheb2ord(Wp,Ws,Rp,Rs,'s');| \\
+                    & \verb|[b,a] = cheby2(n,Rs,Wn,'s');|              \\
+        Elliptic Filter & \verb|[n,Wn] = ellipord(Wp,Ws,Rp,Rs,'s');|   \\
+                    & \verb|[b,a] = ellip(n,Rp,Rs,Wn,'s');|            \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+
+Comparison of four common used filters are shown in Fig~\ref{fig:filters} with options \verb|Wp=1|,\verb|Ws=3|, \verb|Rp=1|, \verb|Rp=40|. For the same target, elliptic filter has the least order but there are ripples in both passband and stopband. Butterworth filter has flat frequency response with passband, but the order is the largest, which means it takes more resources for calculation. Chebyshev filters have a compromise with order and ripple, where type I has ripples in passband and is flat in stopband, while type II is on the contrary.
+
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.6\textwidth]{filter.pdf}
+    \caption{Comparison of four common used IIR filters.}
+    \label{fig:filters}
+\end{figure}
+
+
+As has been mentioned, functions mentioned above can also be used to design digital filters. Besides, some methods such as `impulse invariance' and `bilinear' can be used to discretize an analog filter.
+
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.6\textwidth]{filter-c2d.pdf}
+    \caption{Filter design discretization.}
+    \label{fig:filter-c2d}
+\end{figure}
 
 
 
