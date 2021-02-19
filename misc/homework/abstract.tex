@@ -1,5 +1,12 @@
 \begin{abstract}
-    Fourier transform opened a door to analyze signal in frequency domain, from which a series of transforms were born, such as Laplace transform for system design and Z transform for discrete analysis.
+    Fourier transform opened a door to analyze signal in frequency domain, from which a series of transforms were born, such as Laplace transform for system design and Z transform for discrete analysis. In order to modify the frequency properties of a given signal, a large class of filters can be employed.
 
-    Power spectrum density is a powerful tool to analyze random signal in frequency domain, while a class of filters can change the frequency properties of a given signal. 
+
+    In this paper, power spectrum density is firstly introduced, which extends the Fourier transform and can analyze random signal in frequency domain. An algorithm to estimate logarithmic frequency axis power spectral density is discussed and compared with the periodogram and Welch's method.
+
+
+    Then, filter design with built-in functions in both MATLAB and Python is introduced, including infinite impulse response filters and finite impulse response filters. Some useful functions to convert analog filter to digital filter are mentioned and compared. Zero-phase filtering technology is discussed to compensate the delay caused by normal filtering.
+
+    
+    Finally, a simulation was run to validate the performances of the filter to suppress high-frequency disturbances of normal \SI{50}{Hz} power system. The results confirmed that the filter attenuated disturbances outside the bandwidth about three orders of magnitude.
 \end{abstract}

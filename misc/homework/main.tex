@@ -1,7 +1,7 @@
 \section{Introduction}
 
 
-Fourier series (FS) gives a new idea to expand a continuous and periodic signal with a series of trigonometric functions, which glanced at frequency analysis at the first time. Based on the idea of FS, other transformations were proposed to extend the limit on FS: (1) Fourier transform (FT) for continuous but non-periodic signals; (2) discrete time Fourier transform (DTFT) for sampled signals; (3) discrete Fourier transform (DFT) for completely discrete analysis. These transformations make up Fourier transform family under Dirichlet conditions. Besides, Laplace transform extends the frequency into complex domain and Z transform simplifies DTFT practically.
+Fourier series (FS) gives a new idea to expand a continuous and periodic signal with a series of trigonometric functions, which glanced at frequency analysis at the first time. Based on the idea of FS, other transformations were proposed to extend the limit on FS \cite{SignalSystem}: (1) Fourier transform (FT) for continuous but non-periodic signals; (2) discrete time Fourier transform (DTFT) for sampled signals; (3) discrete Fourier transform (DFT) for completely discrete analysis. These transformations make up Fourier transform family under Dirichlet conditions. Besides, Laplace transform extends the frequency into complex domain and Z transform simplifies DTFT practically.
 
 
 Analysis in frequency domain provides more options to process signals or evaluate linear systems. For example, a spectrum given by fast Fourier transform (FFT, the fast algorithm for DFT) shows the frequency distribution of the signal; the location of poles and zeros of a system demonstrate the stability and dynamic properties.
@@ -15,7 +15,7 @@ In this paper, attentions are paid to digital signal processing. Power spectrum 
 \section{Power Spectrum Density}
 
 
-DFT is used to analysis a certain signal. However, there are many kinds of stochastic signals whose statistical properties are the most concerned. As for a stationary and random signal, power spectrum density (PSD) is taken to estimate its properties in frequency domain.
+DFT is used to analysis a certain signal. However, there are many kinds of stochastic signals whose statistical properties are the most concerned. As for a stationary and random signal, power spectrum density (PSD) is taken to estimate its properties in frequency domain \cite{SignalDetect}.
 
 
 PSD is defined as the Fourier transform of the autocorrelation function of the given signal $x(t)$
@@ -82,7 +82,7 @@ The idea of Welch's method is shown in Fig~\ref{fig:Welch} and the relevant func
 \subsection{Logarithmic Frequency Axis Power Spectral Density}
 
 
-As shown in Fig~\ref{fig:plotPSD}, by averaging PSD using Welch's method, the curve is less noisy. However, because the data is divided into segments, the length decreases, which decreases the frequency resolution. To further improve Welch's method, a new method named Logarithmic frequency axis Power Spectral Density (LPSD) was proposed \cite{trobsImprovedSpectrumEstimation2006}.
+As shown in Fig~\ref{fig:plotPSD}, by averaging PSD using Welch's method, the curve is less noisy. However, because the data is divided into segments, the length decreases, which decreases the frequency resolution. To further improve Welch's method, a new method named Logarithmic frequency axis Power Spectral Density (LPSD) was proposed \cite{LPSD}.
 
 
 Considering that most signals occupy a wideband in frequency domain, the PSD is usually plotted with a logarithmic axis. Thus, the basic idea of the LPSD is to construct logarithmic frequency axis rather than linear axis. As a consequence, the frequency resolution changes with frequency, which allows dividing data into different segments. That is to say, the LPSD algorithm succeeds the idea of Welch's method and divides data according to the frequency point at which the PSD is estimated. The detailed procedure of the algorithm is discussed hereafter.
@@ -198,10 +198,10 @@ To design a filter with built-in functions, properties of the filter shown in Fi
 \end{figure}
 
 
-Some common used filters are listed in Tab~\ref{tab:filterdesign} with MATLAB built-in functions for filter design. In these functions, \verb|Wp| and \verb|Ws| are respectively the angular frequency of passband and stopband ($\omega_p = 2 \uppi f_{\rm pass}$ for example). Passband ripple \verb|Rp| and stopband attenuation \verb|Rs| are described in decibels. With the option \verb|'s'|, the function designs an analog filter. If a digital filter is desired, functions should be called without the option \verb|'s'| and \verb|Wp| and \verb|Ws| should be the digital frequency which is normalized by the sampling frequency.
+Some common used filters are listed in Tab~\ref{tab:filterdesign} with MATLAB built-in functions for filter design \cite{matlabdoc}. In these functions, \verb|Wp| and \verb|Ws| are respectively the angular frequency of passband and stopband ($\omega_p = 2 \uppi f_{\rm pass}$ for example). Passband ripple \verb|Rp| and stopband attenuation \verb|Rs| are described in decibels. With the option \verb|'s'|, the function designs an analog filter. If a digital filter is desired, functions should be called without the option \verb|'s'| and \verb|Wp| and \verb|Ws| should be the digital frequency which is normalized by the sampling frequency.
 
 
-For Python users, there are functions with the same names in \verb|scipy.signal| package. If the package is imported by \verb|import scipy.signal as signal|, a prefix \verb|signal.| should be attached to the functions to be called. Besides, the programming rules also has to be noticed. For example, the command \verb|[b,a]=butter(n,Wn,'s')| in MATLAB is equivalent to the command \verb|b,a=signal.butter(n,Wn,analog=True)| in Python.
+For Python users, there are functions with the same names in \verb|scipy.signal| package \cite{scipydoc}. If the package is imported by \verb|import scipy.signal as signal|, a prefix \verb|signal.| should be attached to the functions to be called. Besides, the programming rules also has to be noticed. For example, the command \verb|[b,a]=butter(n,Wn,'s')| in MATLAB is equivalent to the command \verb|b,a=signal.butter(n,Wn,analog=True)| in Python.
 
 
 \begin{table}[!htb]
@@ -262,7 +262,7 @@ Two methods are generally used to design a FIR filter. The first one is base on 
 Another method for FIR filter design is based on the frequency sample, where only filter order, frequencies and target responses are necessary. The function is named \verb|fir2| in MATLAB and \verb|scipy.signal.firwin2| in Python.
 
 
-Applications with graphical user interface (GUI) are also available for filter design. They are \verb|filterBuilder| or \verb|filterDesigner| (or \verb|fdatool| in old version) in MATLAB and \verb|pyfdax| in Python.
+Applications with graphical user interface (GUI) are also available for filter design. They are \verb|filterBuilder| or \verb|filterDesigner| (or \verb|fdatool| in old version) in MATLAB and \verb|pyfdax| in Python \cite{pyfda}.
 
 
 FIR filter is easy to realize in digital device while IIR filter has less order. Filter type should be selected according to the requirements and equipment constraints before it is designed. Design results should be checked, including stability, frequency response. Besides, for real-time applications, the filter must be causal.
@@ -273,7 +273,7 @@ FIR filter is easy to realize in digital device while IIR filter has less order.
 \subsection{Zero-Phase Filtering}
 
 
-The dynamic of the filter always leads to delay. To decrease the delay, an all-pass filter can be employed to adjust the phase response of the filter. As for sampled data, a technology name zero-phase filtering can be used. For digital filter with transfer function $H(z)$, there are four steps to realize zero-phase filtering.
+The dynamic of the filter always leads to delay. To decrease the delay, an all-pass filter can be employed to adjust the phase response of the filter. As for sampled data, a technology name zero-phase filtering can be used. For digital filter with transfer function $H(z)$, there are four steps to realize zero-phase filtering \cite{mExamples}.
 \begin{enumerate}[\indent Step (1)]
     \setlength{\itemsep}{0pt}
     \item Filter: $X(z) \rightarrow H(z)X(z)$ ;
