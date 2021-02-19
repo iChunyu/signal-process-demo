@@ -99,3 +99,15 @@
 
 \usepackage{indentfirst}
 \setlength{\parindent}{2em}
+
+
+
+\renewenvironment{abstract}{
+    \begin{center}
+        \bfseries \large
+        Abstract
+    \end{center}
+    \phantomsection     % required if using hyperref
+    \addcontentsline{toc}{section}{Abstract}
+    \normalsize \par
+}{}

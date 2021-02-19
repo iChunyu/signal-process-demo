@@ -7,7 +7,7 @@ Fourier series (FS) gives a new idea to expand a continuous and periodic signal 
 Analysis in frequency domain provides more options to process signals or evaluate linear systems. For example, a spectrum given by fast Fourier transform (FFT, the fast algorithm for DFT) shows the frequency distribution of the signal; the location of poles and zeros of a system demonstrate the stability and dynamic properties.
 
 
-In this report, attentions are paid to digital signal processing. Power spectrum density is firstly introduced as a tool for frequency analysis and a new algorithm is delivered. Then the design and properties of some common used filters are discussed. Finally, an example is given to show processing procedure and the results.
+In this paper, attentions are paid to digital signal processing. Power spectrum density is firstly introduced as a tool for frequency analysis and a new algorithm is delivered. Then the design and properties of some common used filters are discussed. Finally, an example is given to show processing procedure and the results.
 
 
 
@@ -85,7 +85,7 @@ The idea of Welch's method is shown in Fig~\ref{fig:Welch} and the relevant func
 As shown in Fig~\ref{fig:plotPSD}, by averaging PSD using Welch's method, the curve is less noisy. However, because the data is divided into segments, the length decreases, which decreases the frequency resolution. To further improve Welch's method, a new method named Logarithmic frequency axis Power Spectral Density (LPSD) was proposed \cite{trobsImprovedSpectrumEstimation2006}.
 
 
-Considering that most signals occupy a wideband in frequency domain, the PSD is usually plotted with a logarithmic axis. Thus, the basic idea of LPSD is to construct logarithmic frequency axis rather than linear axis. As a consequence, the frequency resolution changes with frequency, which allows dividing data into different segments. That is to say, the LPSD algorithm succeeds the idea of Welch's method and divides data according to the frequency point at which the PSD is estimated. The detailed procedure of the algorithm is discussed hereafter.
+Considering that most signals occupy a wideband in frequency domain, the PSD is usually plotted with a logarithmic axis. Thus, the basic idea of the LPSD is to construct logarithmic frequency axis rather than linear axis. As a consequence, the frequency resolution changes with frequency, which allows dividing data into different segments. That is to say, the LPSD algorithm succeeds the idea of Welch's method and divides data according to the frequency point at which the PSD is estimated. The detailed procedure of the algorithm is discussed hereafter.
 
 
 A logarithmic axis is made up of geometric progression, the length of which is assumed to be $J_{\rm des}$ and can be set manually, and it's not necessary equal to the length of data, $N$. The common ratio $q$ and ideal frequency resolution can be calculated as below.
@@ -354,4 +354,4 @@ Original signal is compared with filtered signal in Fig~\ref{fig:prjSignals} in 
 \section{Conclusions}
 
 
-% Power spectrum density and filter design have been discussed in this report. The former one is a powerful tool to analyze signal in frequency domain while the later one includes a large class of filters and their applications.
+In this paper, the LPSD algorithm is employed to estimate PSD, which takes advantage of minimum frequency range from the periodogram and succeeds the idea of averaging from Welch's method. Unable to embed FFT, the LPSD takes more time to calculate but provides more precise estimation with logarithmic frequency axis. Filters are designed with built-in functions and zero-phase filtering is used to filter data, which can compensate the delay caused by normal filtering. Zero-phase filtering is not causal, thus it cannot be used in real-time applications. A simulation was designed to validate the filter to suppress high-frequency disturbances from nonlinear effects of the \SI{50}{Hz} power supply. The results confirmed the properties of the filter and the PSD showed the disturbances in high-frequency band was suppressed by three orders of magnitude.
