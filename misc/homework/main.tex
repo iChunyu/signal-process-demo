@@ -129,7 +129,7 @@ and the number of segments is computed below.
 
 Average is usually deducted in PSD estimation. The average of $j$-th frequency point and $k$-th segment is given below.
 \begin{equation}
-    a(j,k) = \frac{1}{L(j)} \sum_{l=1}^{L(j)} x(D(j)(k-1)+l)
+    a(j,k) = \frac{1}{L(j)} \sum_{l=0}^{L(j)-1} x(D(j)(k-1)+l)
 \end{equation}
 Deducting the average and applying window function $w(j,l)$, the segment to be transformed is gained.
 \begin{equation}
@@ -137,7 +137,7 @@ Deducting the average and applying window function $w(j,l)$, the segment to be t
 \end{equation}
 The PSD of $k$-th segment at frequency $f(j)$ is calculated by single point DFT as below.
 \begin{equation}
-    A(j,k) = \sum_{l=1}^{L(j)} G(j,k,l) \iexp{-\mathrm{j} 2 \uppi \frac{m(j)}{L(j)} l}
+    A(j,k) = \sum_{l=0}^{L(j)-1} G(j,k,l) \iexp{-\mathrm{j} 2 \uppi \frac{m(j)}{L(j)} l}
 \end{equation}
 Note that the frequency index $m(j)=\frac{f(j)}{r(j)}$ is not necessary to be an integer.
 
@@ -148,7 +148,7 @@ Finally, the PSD at $j$-th frequency point is given by the average of $K(j)$ seg
 \end{equation}
 The coefficient $C_{\rm PSD}(j)$ is used to normalize the PSD, which is given below.
 \begin{equation}
-    C_{\rm PSD}(j) = \frac{2}{f_s\sum_{l=1}^{L(j)} w^2(j,l)}
+    C_{\rm PSD}(j) = \frac{2}{f_s\sum_{l=0}^{L(j)-1} w^2(j,l)}
 \end{equation}
 
 
