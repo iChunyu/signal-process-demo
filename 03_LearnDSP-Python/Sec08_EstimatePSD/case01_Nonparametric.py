@@ -38,9 +38,12 @@ f3 = np.delete(f3,0)
 px3 = np.delete(px3,0)
 
 #%% results
+_,h = signal.freqz(b,a,f1,fs=fs)
+
 plt.figure()
-plt.loglog(f1,px1,label='periodogram')
-plt.loglog(f3,px3,label='welch')
+plt.loglog(f1,np.sqrt(px1),label='periodogram')
+plt.loglog(f3,np.sqrt(px3),label='welch')
+plt.loglog(f1,np.abs(h),'--',label='true PSD')
 plt.grid()
 plt.legend()
 plt.xlabel('Frequency (Hz)')

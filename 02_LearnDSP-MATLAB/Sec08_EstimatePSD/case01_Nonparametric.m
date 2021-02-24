@@ -32,12 +32,15 @@ noverlap = round(nfft*0.6);
 [px3,f3] = pwelch(x,win,noverlap,nfft,fs,'onesided');
 
 %% results
+h = freqz(b,a,f1,fs);
+
 figure
-loglog(f1,px1,'DisplayName','periodogram')
+loglog(f1,sqrt(px1),'DisplayName','periodogram')
 hold on
 grid on
-loglog(f2,px2,'DisplayName','pmtm')
-loglog(f3,px3,'DisplayName','pwelch')
+loglog(f2,sqrt(px2),'DisplayName','pmtm')
+loglog(f3,sqrt(px3),'DisplayName','pwelch')
+loglog(f1,abs(h),'--','DisplayName','true PSD')
 legend
 xlabel('Frequency (Hz)')
 ylabel('PSD')
