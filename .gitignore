@@ -11,9 +11,14 @@ delete-temp-files.bat
 *.toc
 *.nav
 *.snm
+*.bbl
+*.blg
 
 # MATLAB
 *.asv
 
 # Python
 __pycache__/
+
+# VScode
+.vscode/

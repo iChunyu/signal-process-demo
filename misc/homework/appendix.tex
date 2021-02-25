@@ -1,0 +1,420 @@
+\section{Source Code}
+
+
+To save pages, only codes that are relevant to the text are given below. I will upload all the codes to \href{https://github.com/iChunyu/signal-process-demo}{my GitHub repository} after I get score of \textsl{Digital Signal Processing} to avoid being judged cheating.
+
+
+
+
+\subsection{LPSD Algorithm}
+
+
+{\noindent \bfseries Python Version}
+
+
+\begin{lstlisting}[language=Python]
+'''
+Personal fuction library in Python
+Contents
+    (1) pxx,f = lpsd(data,fs,Jdes=1000)
+
+Last Update: 2021-02-10
+'''
+
+# %%
+import numpy as np
+import matplotlib.pyplot as plt
+
+# %% function01: LPSD
+'''
+LPSD: Logarithmic frequency axis Power Spectral Density
+pxx,f = lpsd(data,fs,Jdes=1000)
+   data --- Input data series, one dimension vector
+   fs   --- Sample frequency, unit: Hz
+   Jdes --- Desired frequency points, default: 1000
+   pxx  --- One-sided PSD, unit: *^2/Hz
+   f    --- Frequency points related to PSD points, unit: Hz
+   Default window function is hanning window.
+
+Ref: Improved spectrum estimation from digitized timeseries on a logarithmic frequency axis
+     Article DOI: 10.1016/j.measurement.2005.10.010
+
+Remark: Unfamiliar with Python by now, the functiondoesn't support matrix data by now.
+    [MATLAB version supports matrix data.]
+
+XiaoCY 2021-02-10
+'''
+
+# subfuction
+# calculate frequency points
+def getFreqs(N,fs,Jdes,Kdes,ksai):
+    fmin = fs/N
+    fmax = fs/2
+    r_avg = fs/N*(1+(1-ksai)*(Kdes-1))
+
+    g = (N/2)**(1/(Jdes-1))-1
+
+    f = np.zeros(Jdes)-1
+    L = np.copy(f)
+    m = np.copy(f)
+    j = 0
+    fj = fmin
+    while fj < fmax:
+        rj = fj*g
+        if rj < r_avg:
+            rj = np.sqrt(rj*r_avg)
+        if rj < fmin:
+            rj = fmin
+        
+        Lj = np.floor(fs/rj)
+        rj = fs/Lj
+        mj = fj/rj
+
+        f[j] = fj
+        L[j] = Lj
+        m[j] = mj
+
+        fj = fj+rj
+        j += 1
+    
+    idx = f<0
+    f = np.delete(f,idx)
+    L = np.delete(L,idx)
+    m = np.delete(m,idx)
+    return f,L,m
+
+# main
+def lpsd(data,fs,Jdes=1000):
+    Kdes = 100
+    ksai = 0.5
+    N = len(data)
+
+    f,L,m = getFreqs(N,fs,Jdes,Kdes,ksai)
+
+    J = len(f)
+    pxx = np.zeros(J)
+    for j in range(J):
+        Dj = np.floor((1-ksai)*L[j])
+        Kj = np.floor((N-L[j])/Dj+1)
+        w = np.hanning(L[j])
+        C_PSD = 2/fs/np.dot(w,w)
+        l = np.arange(0,L[j])
+        W1 = np.cos(-2*np.pi*m[j]/L[j]*l)
+        W2 = np.sin(-2*np.pi*m[j]/L[j]*l)
+        A = 0.0
+        for k in range(int(Kj)):
+            G = data[int(k*Dj):int(k*Dj+L[j])].copy()
+            G = G-np.mean(G)
+            G = G*w
+            A += np.dot(G,W1)**2 + np.dot(G,W2)**2
+        pxx[j] = A/Kj*C_PSD
+
+    return pxx,f
+
+if __name__ =='__main__':
+    fs = 10
+    x = np.random.randn(1000)*np.sqrt(fs/2)
+    pxx,f = lpsd(x,fs)
+
+    plt.figure
+    plt.loglog(f,np.sqrt(pxx))
+    plt.grid()
+    plt.xlabel('Frequency (Hz)')
+    plt.ylabel(r'PSD ($\rm*/\sqrt{Hz}$)')
+\end{lstlisting}
+
+
+{\noindent \bfseries MATLAB Version}
+
+
+\begin{lstlisting}[language=Matlab]
+% Use LPSD mothod to plot power spectral density
+% [Pxx,f] = iLPSD(Data,fs,Jdes)
+%    Data --- Input data, processed by column
+%    fs   --- Sample frequency, unit: Hz
+%    Jdes --- Desired frequency points, default: 1000
+%    Pxx  --- One-sided PSD, unit: *^2/Hz
+%    f    --- Frequency points related to PSD points,unit: Hz
+%    Default window function is hanning window.
+% Demo:
+%    iLPSD(data,fs)
+%       Plot PSD using default settings.
+%    h = iLPSD(data,fs,Jdes)
+%       Plot PSD with desired points of 1000
+%    [Pxx,f] = iLPSD(data,fs)
+%       Return PSD points, not plot any figure
+
+% Ref: Improved spectrum estimation from digitizedtime series on a logarithmic frequency axis
+%      Article DOI: 10.1016/j.measurement.2005.10.010
+
+% XiaoCY 2020-04-21
+
+%% Main
+function varargout = iLPSD(varargin)
+    
+    nargoutchk(0,2);
+    narginchk(2,3);
+    
+    data = varargin{1};
+    fs = varargin{2};
+    if nargin == 3
+        Jdes = varargin{3};
+    else
+        Jdes = 1000;
+    end
+    
+    Kdes = 100;
+    ksai = 0.5;
+    
+    [N,nCol] = size(data);
+    if N==1 && nCol~=1
+       data = data';
+       N = nCol;
+       nCol = 1;
+    end
+    
+    [f,L,m] = getFreqs(N,fs,Jdes,Kdes,ksai);
+    
+    J = length(f);
+    P = zeros(J,nCol);
+    for j = 1:J
+        Dj = floor((1-ksai)*L(j));
+        Kj = floor((N-L(j))/Dj+1);
+        w = hann(L(j));
+        C_PSD = 2/fs/sum(w.^2);
+        l = (0:L(j)-1)';
+        W1 = cos(-2*pi*m(j)/L(j).*l);
+        W2 = sin(-2*pi*m(j)/L(j).*l);
+        A = zeros(1,nCol);
+        for k = 0:Kj-1
+            G = data(k*Dj+1:k*Dj+L(j),:);
+            G = G-mean(G);        % G = detrend(G);   
+            G = G.*w;
+            A = A + sum(G.*W1).^2+sum(G.*W2).^2;
+        end
+        P(j,:) = A/Kj*C_PSD;
+    end
+    
+    switch nargout
+        case 0
+            PlotPSD(P,f)
+        case 1
+            varargout{1} = PlotPSD(P,f);
+        case 2
+            varargout{1} = P;
+            varargout{2} = f;
+        otherwise
+            % Do Nothing
+    end
+end
+
+%% Subfunctions
+% get logarithmic frequency points
+function [f,L,m] = getFreqs(N,fs,Jdes,Kdes,ksai)
+    fmin = fs/N;
+    fmax = fs/2;
+    r_avg = fs/N*(1+(1-ksai)*(Kdes-1));
+    
+    g = (N/2)^(1/(Jdes-1))-1;
+    
+    f = zeros(Jdes,1)-1;
+    L = f;
+    m = f;
+    j = 1;
+    fj = fmin;
+    while fj < fmax
+        rj = fj*g;
+        if rj < r_avg
+            rj = sqrt(rj*r_avg);
+        end
+        if rj < fmin
+            rj = fmin;
+        end
+        
+        Lj = floor(fs/rj);
+        rj = fs/Lj;
+        mj = fj/rj;
+        
+        f(j) = fj;
+        L(j) = Lj;
+        m(j) = mj;
+        
+        fj = fj+rj;
+        j = j+1;
+    end
+    f(f<0) = [];
+    L(L<0) = [];
+    m(m<0) = [];
+end
+
+% plot PSD
+function varargout = PlotPSD(P,f)
+    hLine = loglog(f,sqrt(P));
+    grid on
+    xlabel('Frequency (Hz)')
+    ylabel('PSD ([Unit]/Hz^{1/2})')
+    
+    if nargout == 1
+        varargout{1} = hLine;
+    end
+end
+\end{lstlisting}
+
+
+
+
+
+\subsection{Main Code}
+
+
+{\noindent \bfseries Python Version}
+
+
+\begin{lstlisting}[language=Python]
+'''
+Main code for DSP project
+(See ../DSP_Project_Reqirement&Guidance(2020 Fall).pdfProject-1 for detail.)
+
+XiaoCY 2021-02-18
+'''
+
+#%%
+import numpy as np
+import matplotlib.pyplot as plt
+import scipy.signal as signal
+import springlib as sp
+
+savepdf = False
+N = 1000
+fs = 1000.0
+pi = np.pi
+
+t = np.arange(N)/fs
+x1 = np.cos(2*pi*50*t)
+x2 = 0.3*np.cos(2*pi*100*t + pi/3)
+x3 = 0.2*np.cos(2*pi*150*t - pi/3)
+x4 = 0.1*np.sin(2*pi*250*t)
+xn = 0.05*np.random.randn(N)
+x = x1+x2+x3+x4+xn
+
+#%% design IIR filter
+Wp = 110./(fs/2)             # passband cornerfrequency (normalized)
+Ws = 130./(fs/2)             # stopband cornerfrequency (normalized)
+Rp = 1.                      # passband ripple (dB)
+Rs = 60.                     # stopband attenuation(dB)
+
+Nz,Wn = signal.cheb2ord(Wp,Ws,Rp,Rs)
+b,a = signal.cheby2(Nz,Rs,Wn)
+
+f = np.linspace(0,fs/2,500)
+_,g = signal.freqz(b,a,f,fs=fs)
+gdb = 20*np.log10(np.abs(g))
+
+plt.figure()
+plt.plot(f,gdb,label='Chebyshev Type II')
+plt.grid()
+plt.legend()
+plt.xlabel('Frequency (Hz)')
+plt.ylabel('Gain (dB)')
+plt.xlim(0,fs/2)
+if savepdf: 
+    plt.savefig('prjFilter.pdf')
+plt.show()
+
+#%% filter data
+y = signal.filtfilt(b,a,x)
+
+plt.figure()
+plt.plot(t,x,label='original')
+plt.plot(t,y,label='filtered')
+plt.grid()
+plt.legend()
+plt.xlabel('Time (s)')
+plt.ylabel('Signal (A)')
+plt.xlim(0,0.2)
+if savepdf:
+    plt.savefig('prjSignal.pdf')
+plt.show()
+
+
+pxx,fx = sp.lpsd(x,fs)
+pyy,fy = sp.lpsd(y,fs)
+
+plt.figure()
+plt.semilogy(fx,np.sqrt(pxx),label='original')
+plt.semilogy(fy,np.sqrt(pyy),label='filtered')
+plt.grid()
+plt.legend()
+plt.xlabel('Frequency (Hz)')
+plt.ylabel(r'Signal ($\rm A/\sqrt{Hz}$)')
+plt.xlim(0,fs/2)
+if savepdf:
+    plt.savefig('prjPSD.pdf')
+plt.show()
+\end{lstlisting}
+
+
+{\noindent \bfseries MATLAB Version}
+
+
+\begin{lstlisting}[language=Matlab]
+% Main code for DSP project
+% (See ../DSP_Project_Reqirement&Guidance(2020 Fall).pdf Project-1 for detail.)
+
+% XiaoCY 2021-02-18
+
+%%
+clear;clc
+
+N = 1e3;
+fs = 1e3;
+
+t = (0:N-1)'/fs;
+x1 = cos(2*pi*50*t);
+x2 = 0.3*cos(2*pi*100*t + pi/3);
+x3 = 0.2*cos(2*pi*150*t - pi/3);
+x4 = 0.1*sin(2*pi*250*t);
+xn = 0.05*randn(N,1);
+x = x1+x2+x3+x4+xn;
+
+%%
+Wp = 110/(fs/2);                % passband corner frequency (normalized)
+Ws = 130/(fs/2);                % stopband corner frequency (normalized)
+Rp = 1;                         % passband ripple (dB)
+Rs = 60;                        % stopband attenuation (dB)
+
+[Nz,Wn] = cheb2ord(Wp,Ws,Rp,Rs);
+[b,a] = cheby2(Nz,Rs,Wn);
+
+f = linspace(0,fs/2,500);
+g = freqz(b,a,f,fs);
+gdb = 20*log10(abs(g));
+
+figure('Name','filter')
+plot(f,gdb,'DisplayName','Chebyshev Type II')
+grid on
+legend
+xlabel('Frequency (Hz)')
+ylabel('Gain (dB)')
+
+%%
+y = filtfilt(b,a,x);
+
+figure('Name','time')
+plot(t,x,'DisplayName','original')
+hold on
+grid on
+plot(t,y,'DisplayName','filtered')
+legend
+xlabel('Time (s)')
+ylabel('Signal (A)')
+xlim([0,0.1])
+
+figure('Name','PSD')
+[pxx,f] = iLPSD([x,y],fs);
+semilogy(f,sqrt(pxx))
+grid on
+legend('original','filtered')
+xlabel('Frequency (Hz)')
+ylabel('PSD (A/Hz^{1/2})')
+\end{lstlisting}
