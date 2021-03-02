@@ -111,3 +111,14 @@
     \addcontentsline{toc}{section}{Abstract}
     \normalsize \par
 }{}
+
+% override `cleardoublepage', see `fancyhdr' doc
+\makeatletter
+\def\cleardoublepage{\clearpage\if@twoside \ifodd\c@page\else
+\begingroup
+\mbox{}
+\thispagestyle{empty}
+\newpage
+\if@twocolumn\mbox{}\newpage\fi
+\endgroup\fi\fi}
+\makeatother
