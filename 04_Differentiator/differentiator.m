@@ -25,15 +25,16 @@ figure
 plot(t,x,'DisplayName','data')
 hold on
 grid on
+plot(t,x0,'DisplayName','signal')
 plot(t,xn,'DisplayName','noise')
 legend
 xlabel('Time (s)')
-ylabel('Signals')
+ylabel('Signal')
 xlim([0 10])
 
 %% numerical difference
 y1 = diff(x)/Ts;
-t1 = t(1:end-1);
+t1 = t(2:end);
 
 [b,a] = butter(2,5/(fs/2));
 y1f = filter(b,a,y1);
@@ -46,6 +47,7 @@ plot(t1,y1f,'DisplayName','filtered difference')
 plot(t,y0,'DisplayName','real derivaticve')
 legend
 xlabel('Time (s)')
+ylabel('Signal')
 xlim([0 10])
 
 figure
@@ -54,10 +56,10 @@ hold on
 iLPSD([y1 y1f],fs)
 legend('original data','numerical difference','filtered difference',...
     'location','northwest')
+ylabel('PSD')
 ylim([1e-3 1e2])
 
 %% analog differentiator (given by numerical simulation)
-s = tf('s');
 T1 = 5*Ts;
 sys1 = tf([1 0],[T1 1]);
 y21 = lsim(sys1,x,t);
@@ -75,7 +77,15 @@ plot(t,y22,'DisplayName','use two LPFs')
 plot(t,y0,'DisplayName','real derivaticve')
 legend
 xlabel('Time (s)')
+ylabel('Signal')
 xlim([0 10])
+
+figure
+iLPSD([x y21 y22],fs)
+legend('original data','use one LPF','use two LPFs',...
+    'location','northwest')
+ylabel('PSD')
+ylim([1e-3 1e2])
 
 %% tracking differentiator
 h = 10*Ts;
@@ -88,7 +98,7 @@ y3 = zeros(size(x));
 for k = 1:K
     % fhan: p107, E.q.(2.7.24)
     a0 = h*x2;
-    y = x1-x(k,:)+a0;
+    y = x1-x(k)+a0;
     a1 = sqrt(d.*(d+8*abs(y)));
     a2 = a0+sign(y).*(a1-d)/2;
     sy = (sign(y+d)-sign(y-d))/2;
@@ -109,6 +119,7 @@ grid on
 plot(t,y0,'DisplayName','real derivaticve')
 legend
 xlabel('Time (s)')
+ylabel('Signal')
 xlim([0 10])
 
 figure
@@ -117,6 +128,7 @@ hold on
 iLPSD(y3,fs)
 legend('original data','tracking differentiator',...
     'location','northwest')
+ylabel('PSD')
 ylim([1e-3 1e2])
 
 %% results
@@ -130,6 +142,7 @@ plot(t,y3,'DisplayName','tracking differentiator')
 plot(t,y0,'DisplayName','real derivaticve')
 legend
 xlabel('Time (s)')
+ylabel('Signal')
 xlim([0 10])
 
 figure
@@ -140,4 +153,5 @@ legend('filtered difference',...
     'use one LPF',...
     'use two LPFs',...
     'tracking differentiator')
+ylabel('PSD')
 ylim([1e-3 1e2])
