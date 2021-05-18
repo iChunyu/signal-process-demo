@@ -2,16 +2,12 @@
 
 学习记录，朴实无华。
 
-愿意光临本仓库的领导们请按下面的提示参观：
+各文件夹主要内容如下：
 
-```text
-signal-process-demo
-    ├── 01_TeachingDemo                 # 某次课程所用的示例，简要介绍功率谱密度
-    ├── 02_LearnDSP-MATLAB              # 数字信号处理练习：MATLAB编程
-    ├── 03_LearnDSP-Python              # 数字信号处理练习：Python编程
-    ├── misc                            # 杂项
-    ├── LICENSE
-    └── README.md
-```
+- `01_IntroPSD`：某次跟同学介绍功率谱估计时做的讲义和相关函数；
+- `02_LearnDSP-MATLAB`：学习《MATLAB数字信号处理：85 个使用案例精讲——入门到进阶》，并在 MATLAB 中重复一些我自己觉得有用的技巧；
+- `03_LearnDSP-MATLAB`：同上，只不过使用 Python 实现；
+- `04_Differentiator`：微分器介绍与仿真对比；
+- `mics`：未单独归类的杂项。
 
 不定时更新。
