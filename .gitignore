@@ -16,6 +16,9 @@ delete-temp-files.bat
 
 # MATLAB
 *.asv
+*.slxc
+*.r20*
+slprj/
 
 # Python
 __pycache__/
