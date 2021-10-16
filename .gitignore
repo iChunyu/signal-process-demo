@@ -25,3 +25,7 @@ __pycache__/
 
 # VScode
 .vscode/
+
+*.gif
+*.avi
+*.mp4
