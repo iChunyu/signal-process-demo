@@ -1,5 +1,4 @@
 % 使用遗传算法求解 TOA 定位中的最小二乘问题
-
 % 输入：
 %       dist --- 测点到锚点的距离
 %          A --- 锚点的位置，每个锚点位置坐标占一行
@@ -22,15 +21,15 @@ function varargout = getPosition(varargin)
     p = inputParser;
     addRequired(p,'dist')
     addRequired(p,'A')
-    addOptional(p,'nChrom',5000)
-    addOptional(p,'nCross',1500)
-    addOptional(p,'nMutat',2000)
-    addOptional(p,'nIter',500)
-    addOptional(p,'nCheck',50)
-    addOptional(p,'nInt',4)
-    addOptional(p,'nFrac',2)
-    addOptional(p,'gCross',9)
-    addOptional(p,'gMutat',9)
+    addParameter(p,'nChrom',5000)
+    addParameter(p,'nCross',1500)
+    addParameter(p,'nMutat',2000)
+    addParameter(p,'nIter',500)
+    addParameter(p,'nCheck',50)
+    addParameter(p,'nInt',4)
+    addParameter(p,'nFrac',2)
+    addParameter(p,'gCross',9)
+    addParameter(p,'gMutat',9)
     addParameter(p,'showProcess',false)
     parse(p,varargin{:})
 
