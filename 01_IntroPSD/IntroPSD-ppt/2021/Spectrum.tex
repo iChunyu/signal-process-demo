@@ -1,0 +1,299 @@
+\documentclass[UTF8]{ctexbeamer}
+
+\input{packages.tex}
+
+\begin{document}
+    
+\begin{frame}               % titlepage
+    \thispagestyle{empty}
+    \addtocounter{framenumber}{-1}
+
+    \begin{center}
+        \ {}
+        \vspace{12mm}
+
+        \begingroup         % title
+        \zihao{3}\color{darkblue}\bfseries 傅立叶变换与功率谱分析
+        \endgroup
+
+        {\color{darkred}\rule{\textwidth}{0.7pt}}
+
+        \vspace{3mm}
+
+        肖春雨
+
+        \vspace{10mm}
+
+        2021-12-02 \\
+        {\small 华中科技大学}
+    \end{center}
+\end{frame}
+
+
+
+\begin{frame}{报告内容}
+    % \tableofcontents
+    \begin{itemize}
+        \setlength\itemsep{7pt}
+        \item[$\color{darkblue}\bullet$] {\color{darkblue} 连续信号频域分析}
+        \begin{itemize}
+            \item 傅立叶级数：周期信号
+            \item 傅立叶变换：非周期信号
+            \item 两者的统一：狄拉克函数
+        \end{itemize}
+
+        \item[$\color{darkblue}\bullet$] {\color{darkblue} 离散信号频域分析}
+        \begin{itemize}
+            \item 时域采样：频率混叠
+            \item 有限窗长：频率泄露
+            \item 频域采样：栅栏效应
+        \end{itemize}
+
+        \item[$\color{darkblue}\bullet$] {\color{darkblue} 随机信号与功率谱估计}
+        \begin{itemize}
+            \item 功率谱密度：维纳-辛钦定理、帕塞瓦尔等式
+            \item 谱估计算法：周期图、Welch、LPSD
+            \item 功率谱应用：噪声评估、系统辨识
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+
+
+
+\section{连续信号频域分析}
+
+\begin{frame}{周期信号的频域分解}
+    问题：如何将周期信号分解为正弦信号的叠加？
+
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.8\textwidth]{Fourier3d.pdf}
+    \end{figure}
+
+    \small
+    \begin{tcolorbox}[boxrule=0.3pt,
+        fontupper = \zihao{-5}\normalcolor]
+        \begin{itemize}
+            \item 选正交基：$\vec{x},\, \vec{y} \quad\rightarrow\quad \cos k \omega_0 t ,\, \sin k\omega_0 t$
+            \item 坐标表示：$\vec{r} = r_x \vec{x} + r_y \vec{y}  \quad\rightarrow\quad f(t) = \sum a_n \cos  k \omega_0 t$
+            \item 计算内积：$r_x = \sum r_i x_i \quad\rightarrow\quad a_k = \int f(t) \cos k \omega_0 t\, \mathrm{d}t$ 
+        \end{itemize}
+    \end{tcolorbox}
+\end{frame}
+
+
+\begin{frame}{单边傅立叶级数}
+    综合公式
+    \begin{equation*}
+        x(t) = \frac{a_0}{2} + \sum_{k=1}^{+\infty} \left(a_k \cos k\omega_0t + b_k \sin k\omega_0t\right)
+    \end{equation*}
+
+    分析公式
+    \begin{gather*}
+        \left\{\begin{aligned}
+            a_k &= \frac{2}{T} \int_T x(t) \cos k\omega_0t \,\mathrm{d}t \\
+            b_k &= \frac{2}{T} \int_T x(t) \sin k\omega_0t \,\mathrm{d}t \\
+        \end{aligned}\right.
+    \end{gather*}
+
+    收敛条件（Dirichlet Conditions）
+    \begin{itemize}
+        \item 周期内绝对可积
+        \item 不存在第二类间断点
+    \end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{傅立叶级数及其性质}
+    \begin{tcolorbox}[top=0mm,
+        title = 傅立叶级数（Fourier Series）,
+        boxrule = 0.3pt,
+        fontupper = \normalcolor\small]
+        \begin{gather*}
+            x(t) = \sum_{k=-\infty}^{+\infty} A_k \mathrm{e}^{\mathrm{j}k\omega_0t}  
+            \qquad
+            A_k = \frac{1}{T} \int_T x(t) \mathrm{e}^{-\mathrm{j}k\omega_0t}\,\mathrm{d}t
+        \end{gather*}
+    \end{tcolorbox}
+    
+    % \begin{columns}
+    %     \begin{column}{0.4\textwidth}
+    %         \centering
+    %         \includegraphics[width=\textwidth]{FourierSeries.pdf}
+    %     \end{column}
+    %     \begin{column}{0.5\textwidth}
+    %         傅立叶级数的性质
+    %         \begin{itemize}
+    %             \item $\Delta f = {1}/{T}$
+    %             \item 频谱共轭对称
+    %             \item 周期 $\leftrightarrow$ 离散
+    %         \end{itemize}
+    %     \end{column}
+    % \end{columns}
+    \begin{figure}
+        \centering
+        \includegraphics[width=135pt]{FourierSeries1.pdf}
+        \hspace{20pt}
+        \includegraphics[width=135pt]{FourierSeries2.pdf}
+    \end{figure}
+
+    傅立叶级数的性质：
+    $\Delta f = 1/T$，
+    共轭对称性， 
+    周期 $\leftrightarrow$ 离散
+\end{frame}
+
+
+\begin{frame}{非周期信号频域分析}
+    \begin{tcolorbox}[top=0mm,
+        title = 傅立叶变换（Fourier Transform）,
+        boxrule = 0.3pt,
+        fontupper = \normalcolor\small]
+        \begin{gather*}
+            x(t) = \frac{1}{2\pi} \int_{-\infty}^{+\infty} X(\mathrm{j}\omega) \mathrm{e}^{\mathrm{j}\omega t}\,\mathrm{d}\omega 
+            \qquad
+            X(\mathrm{j}\omega) = \int_{-\infty}^{+\infty} x(t) \mathrm{e}^{-\mathrm{j}\omega t}\,\mathrm{d}t 
+        \end{gather*}
+    \end{tcolorbox}
+    
+    \begin{figure}
+        \centering
+        \includegraphics[width=135pt]{FourierTransform1.pdf}
+        \hspace{20pt}
+        \includegraphics[width=135pt]{FourierTransform2.pdf}
+    \end{figure}
+
+    傅立叶变换的性质：
+    共轭对称性， 
+    非周期 $\leftrightarrow$ 连续
+\end{frame}
+
+
+
+\begin{frame}{狄拉克函数的引入}
+    狄拉克函数（采样函数）
+    \begin{equation*}
+        u(t) = \left\{\begin{array}{cl}
+            0 & t < 0 \\
+            1 & t > 0
+        \end{array}\right.
+        \quad \rightarrow \quad
+        \delta (t) := \frac{\mathrm{d}}{\mathrm{d}t} u(t) = \left\{\begin{array}{cl}
+            \infty & t = 0 \\
+            0 & t \ne 0
+        \end{array}\right. 
+    \end{equation*}
+
+    \begin{itemize}
+        \item 采样性质：$\int f(t) \delta (t-t_0) \, \mathrm{d} t = f(t_0)$
+        \item 卷积性质：$\int f(\tau) \ast \delta (t-t_0-\tau) \, \mathrm{d} \tau = f(t-t_0)$
+    \end{itemize}
+
+    傅立叶变换的统一
+    \begin{gather*}
+        X(\mathrm{j}\omega) = 2 \pi A_k \delta (\omega - k\omega_0)\\
+        \frac{1}{2\pi} \int_{-\infty}^{+\infty} X(\mathrm{j}\omega) \mathrm{e}^{\mathrm{j}\omega t}\,\mathrm{d}\omega 
+        \Leftrightarrow  \sum_{k=-\infty}^{+\infty} A_k \mathrm{e}^{\mathrm{j}k\omega_0t}  
+    \end{gather*}
+\end{frame}
+
+
+
+\section{离散信号频域分析}
+
+
+\begin{frame}{时域采样与离散时间傅立叶变换}
+    连续信号的离散化：冲击串采样 $p(t) = \sum \delta (t - n T_s) $
+
+    \begin{figure}
+        \centering
+        \includegraphics[width=200pt]{sample.pdf}
+    \end{figure}
+
+    \begin{tcolorbox}[top=0mm,
+        title = 离散时间傅立叶变换（Discrete-Time Fourier Transform）,
+        boxrule = 0.3pt,
+        fontupper = \normalcolor\small]
+        \begin{gather*}
+            x(n) = \frac{1}{2\pi} \int_{2\pi} X(\mathrm{e}^{\mathrm{j}\omega}) \mathrm{e}^{\mathrm{j}\omega n}\,\mathrm{d}\omega 
+            \qquad
+            X(\mathrm{e}^{\mathrm{j}\omega}) = \sum_{n=-\infty}^{+\infty} x(n) \mathrm{e}^{-\mathrm{j}\omega n}            
+        \end{gather*}
+    \end{tcolorbox}
+\end{frame}
+
+
+\begin{frame}{频谱混叠 --- 连续信号的采样失真}
+    \begin{columns}
+        \begin{column}{0.53\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{aliasing.pdf}
+        \end{column}
+        \begin{column}{0.4\textwidth}
+            混叠的原因
+            \begin{itemize}
+                \item 高频噪声的影响
+                \item 采样率太小
+            \end{itemize}
+
+            防止混叠的一般方法
+            \begin{itemize}
+                \item 抗混叠滤波器
+                \item 提高采样率
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+
+\begin{frame}{频率泄漏 --- 有限时间的截断效应}
+    信号的加窗处理
+    \begin{figure}
+        \centering
+        \includegraphics[height=70pt]{window.pdf}
+        \hspace{20pt}
+        \includegraphics[height=70pt]{window-function.pdf}
+    \end{figure}
+
+    窗函数特性
+    \begin{itemize}
+        \item 主瓣宽度：频率分辨率 $f_\mathrm{res} = 1/T$ 
+        \item 旁瓣高度：频率泄漏
+    \end{itemize}
+
+    常用窗函数：汉宁窗、海明窗、布莱克曼窗……
+\end{frame}
+
+
+
+
+\begin{frame}{频域采样与离散傅立叶变换}
+    \begin{tcolorbox}[top=0mm,
+        title = 离散傅立叶变换（Discrete Fourier Transform）,
+        boxrule = 0.3pt,
+        fontupper = \normalcolor\small]
+        \begin{gather*}
+            x(n) = \sum_{n=-\infty}^{+\infty} X(k) \mathrm{e}^{\mathrm{j} 2\pi\frac{k}{N} n} 
+            \qquad
+            X(k) = \frac{1}{N} \sum_{n=-\infty}^{+\infty} x(n) \mathrm{e}^{-\mathrm{j} 2\pi\frac{k}{N} n}            
+        \end{gather*}
+    \end{tcolorbox}
+\end{frame}
+
+
+
+
+\section{随机信号与功率谱估计}
+
+% 功率谱定义（方差 VS 幅值）
+% 功率谱与幅度谱对比（单频信号 VS 带频信号）
+% 功率谱算法
+
+\begin{frame}[standout]
+    \zihao{0} 谢\ 谢\ ！
+\end{frame}
+
+
+\end{document}

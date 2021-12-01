@@ -1,0 +1,107 @@
+% 设置 Beamer 主题和配色
+\usetheme{metropolis}
+\usecolortheme[style=light]{Nord}
+\usefonttheme[onlymath]{serif}
+\metroset{
+    numbering = fraction,
+    sectionpage = progressbar,
+    progressbar = frametitle
+}
+
+% 设置 \today 日期格式：YYYY-MM-DD
+\usepackage{datetime2}
+
+% 数学相关宏包
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{bm}
+\usepackage{newtxmath}
+\usepackage{cancel}
+
+% 国际单位制
+\usepackage{siunitx}
+
+
+% 图表相关宏包
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{booktabs}
+\usepackage{subcaption}
+\usepackage{graphicx}
+\graphicspath{
+    {../figure/}
+    {../figures/}
+}
+\setbeamerfont{footnote}{size=\tiny}    % 脚注字号
+\renewcommand{\thefootnote}{}           % 取消脚注编号
+\renewcommand\arraystretch{1.25}        % 表格行高
+
+\usepackage{tcolorbox}
+
+% 预设一些好看的颜色
+\definecolor{blue}{rgb}{0.1765,0.5216,0.9412}
+\definecolor{red}{rgb}{0.9569,0.2627,0.2353}
+\definecolor{yellow}{rgb}{1.0000,0.7373,0.1961}
+\definecolor{green}{rgb}{0.0392,0.6588,0.3451}
+\definecolor{pink}{rgb}{0.9843,0.4471,0.6000}
+\definecolor{darkred}{rgb}{0.7490,0.2980,0.4157}
+\definecolor{darkblue}{rgb}{0.3686, 0.5059, 0.6745}
+
+
+% ===========================================================
+\makeatletter
+% 默认值
+\renewcommand{\@title}{这里是报告的标题}
+\renewcommand{\@date}{\today}
+\renewcommand{\@author}{学生}
+\newcommand{\@advisor}{导师}
+\newcommand{\@school}{华中科技大学}
+\renewcommand{\author}[1]{\renewcommand{\@author}{#1}}
+\renewcommand{\date}[1]{\renewcommand{\@date}{#1}}
+\renewcommand{\title}[1]{\renewcommand{\@title}{#1}}
+\newcommand{\advisor}[1]{\renewcommand{\@advisor}{#1}}
+\newcommand{\school}[1]{\renewcommand{\@school}{#1}}
+
+\renewcommand{\maketitle}{
+    \begin{frame}               % titlepage
+        \thispagestyle{empty}
+        \addtocounter{framenumber}{-1}
+    
+        \begin{center}
+            \ {}
+            \vspace{12mm}
+    
+            \begingroup         % title
+            \zihao{3}\color{darkblue}\bfseries \@title
+            \endgroup
+    
+            {\color{darkred}\rule{\textwidth}{0.7pt}}
+    
+            \vspace{3mm}
+    
+            \begin{tabular}{ll}
+                报 \hfill 告 \hfill 人 & \@author \\
+                指 \hfill 导 \hfill 老 \hfill 师 & \@advisor
+            \end{tabular}
+    
+            \vspace{10mm}
+    
+            \@date \\
+            {\small \@school}
+        \end{center}
+    \end{frame}
+}
+\makeatother
+
+\newcommand{\theend}{
+    \begin{frame}[standout]
+        \zihao{0} 谢\ 谢\ ！
+    \end{frame}
+}
+
+\newcommand{\addtoc}{
+    \begin{frame}{报告内容}
+        \tableofcontents
+    \end{frame}
+}
+% ===========================================================
