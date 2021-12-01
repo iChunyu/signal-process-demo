@@ -51,7 +51,7 @@
 
         \item[$\color{darkblue}\bullet$] {\color{darkblue} 随机信号与功率谱估计}
         \begin{itemize}
-            \item 功率谱密度：维纳-辛钦定理、帕塞瓦尔等式
+            \item 功率谱密度：维纳-辛钦定理
             \item 谱估计算法：周期图、Welch、LPSD
             \item 功率谱应用：噪声评估、系统辨识
         \end{itemize}
@@ -139,14 +139,29 @@
         \includegraphics[width=135pt]{FourierSeries2.pdf}
     \end{figure}
 
-    傅立叶级数的性质：
-    $\Delta f = 1/T$，
-    共轭对称性， 
+    基本性质：
+    频率间隔 $\Delta f = 1/T$，
+    共轭对称， 
     周期 $\leftrightarrow$ 离散
 \end{frame}
 
 
-\begin{frame}{非周期信号频域分析}
+\begin{frame}{非周期信号}
+    非周期信号 $\Leftrightarrow$ 周期无限大
+
+    \begin{equation*}
+        \begin{aligned}
+            x(t) &= \sum_{k=-\infty}^{+\infty} A_k \mathrm{e}^{\mathrm{j}k\omega_0t}  \\
+            &= \lim_{T \to \infty} \sum_{k=-\infty}^{+\infty} \frac{1}{T}\mathrm{e}^{\mathrm{j}k\omega_0t} 
+            \underbrace{\int_{-\infty}^{+\infty} x(t) \mathrm{e}^{-\mathrm{j}k\omega_0t}\,\mathrm{d} t }_{X(\mathrm{j}\omega)} \\
+            &= \lim_{\omega_0 \to 0} \sum_{k  = -\infty}^{+\infty} X(\mathrm{j}\omega) \mathrm{e}^{\mathrm{j}k\omega_0t} \omega_0  \\
+            &= \int_{-\infty}^{+\infty} X(\mathrm{j}\omega)  \mathrm{e}^{\mathrm{j}\omega t}\, \mathrm{d}\omega
+        \end{aligned}
+    \end{equation*}
+\end{frame}
+
+
+\begin{frame}{傅立叶变换及其性质}
     \begin{tcolorbox}[top=0mm,
         title = 傅立叶变换（Fourier Transform）,
         boxrule = 0.3pt,
@@ -165,8 +180,8 @@
         \includegraphics[width=135pt]{FourierTransform2.pdf}
     \end{figure}
 
-    傅立叶变换的性质：
-    共轭对称性， 
+    基本性质：
+    共轭对称， 
     非周期 $\leftrightarrow$ 连续
 \end{frame}
 
@@ -191,7 +206,7 @@
         \item 卷积性质：$\int f(\tau) \ast \delta (t-t_0-\tau) \, \mathrm{d} \tau = f(t-t_0)$
     \end{itemize}
 
-    傅立叶变换的统一
+    傅立叶变换的统一表达
     \begin{gather*}
         X(\mathrm{j}\omega) = 2 \pi A_k \delta (\omega - k\omega_0)\\
         \frac{1}{2\pi} \int_{-\infty}^{+\infty} X(\mathrm{j}\omega) \mathrm{e}^{\mathrm{j}\omega t}\,\mathrm{d}\omega 
@@ -211,7 +226,7 @@
         \centering
         \includegraphics[width=200pt]{sample.pdf}
     \end{figure}
-
+    \vspace{\fill}
     \begin{tcolorbox}[top=0mm,
         title = 离散时间傅立叶变换（Discrete-Time Fourier Transform）,
         boxrule = 0.3pt,
@@ -225,14 +240,14 @@
 \end{frame}
 
 
-\begin{frame}{频谱混叠 --- 连续信号的采样失真}
+\begin{frame}{连续信号采样与频谱混叠}
     \begin{columns}
-        \begin{column}{0.53\textwidth}
+        \begin{column}{0.55\textwidth}
             \centering
             \includegraphics[width=\textwidth]{aliasing.pdf}
         \end{column}
         \begin{column}{0.4\textwidth}
-            混叠的原因
+            混叠的直接原因
             \begin{itemize}
                 \item 高频噪声的影响
                 \item 采样率太小
@@ -248,7 +263,7 @@
 \end{frame}
 
 
-\begin{frame}{频率泄漏 --- 有限时间的截断效应}
+\begin{frame}{有限时间截断与频率泄漏}
     信号的加窗处理
     \begin{figure}
         \centering
@@ -267,28 +282,67 @@
 \end{frame}
 
 
-
-
-\begin{frame}{频域采样与离散傅立叶变换}
+\begin{frame}{离散傅立叶变换与栅栏效应}
+    \begin{figure}
+        \centering
+        \includegraphics[width=260pt]{DFT.pdf}
+    \end{figure}
+    \vspace{\fill}
     \begin{tcolorbox}[top=0mm,
-        title = 离散傅立叶变换（Discrete Fourier Transform）,
+        title = 离散傅立叶变换（Discrete Fourier Transform） ,
         boxrule = 0.3pt,
         fontupper = \normalcolor\small]
         \begin{gather*}
-            x(n) = \sum_{n=-\infty}^{+\infty} X(k) \mathrm{e}^{\mathrm{j} 2\pi\frac{k}{N} n} 
+            x(n) = \frac{1}{N} \sum_{k=0}^{N-1} X(k) \mathrm{e}^{\mathrm{j} 2\pi\frac{k}{N} n} 
             \qquad
-            X(k) = \frac{1}{N} \sum_{n=-\infty}^{+\infty} x(n) \mathrm{e}^{-\mathrm{j} 2\pi\frac{k}{N} n}            
+            X(k) = \sum_{n=0}^{N-1} x(n) \mathrm{e}^{-\mathrm{j} 2\pi\frac{k}{N} n}            
         \end{gather*}
     \end{tcolorbox}
 \end{frame}
 
 
 
+\begin{frame}{频率分辨率与计算分辨率}
+    频率分辨率： $X(\mathrm{j}\omega)$ 中能够分辨的最小频率间隔 $f_{\rm res} = \frac{1}{T}$
+    
+    计算分辨率：离散傅立叶变换的频率间隔（栅栏效应）$\Delta f = \frac{f_s}{N}$
+
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.9\textwidth]{freqs-resolution.pdf}
+    \end{figure}
+
+    \begin{itemize}
+        \item 改善频率分辨率：增加采样时长
+        \item 改善计算分辨率：增加采样时长、数据末尾补零
+    \end{itemize}
+    \footnote{程佩清. 数字信号处理. 第四版. 清华大学出版社. 2013. 185--189.}
+\end{frame}
+
 
 \section{随机信号与功率谱估计}
 
+
+\begin{frame}{信号的频域特征}
+    % 功率谱与幅度谱对比（单频信号 VS 带频信号）
+\end{frame}
+
+
+
+\begin{frame}{功率谱密度的计算}
+    维纳--辛钦定理：功率谱密度是自相关函数的傅立叶变换
+    \begin{align*}
+        S_x(\omega) &= \int_{-\infty}^{+\infty} \left( \lim_{T \to \infty} \, \frac{1}{2T} \, \int_{-T}^{T} x(t-\tau)x(t) \,\mathrm{d} t   \right) \mathrm{e}^{-\mathrm{j}\omega\tau} \,\mathrm{d} \tau  \\
+        &= \lim_{T \to \infty} \, \frac{1}{2T} \, \int_{-T}^{T} \int_{-\infty}^{+\infty} x(t)\mathrm{e}^{-\mathrm{j} \omega t} x(t-\tau)\mathrm{e}^{-\mathrm{j}\omega(\tau-t)} \,\mathrm{d} \tau \,\mathrm{d} t \\
+        &= \lim_{T \to \infty} \, \frac{1}{2T} \, \int_{-T}^{T}  x(t)\mathrm{e}^{-\mathrm{j} \omega t} \bar{X}(\mathrm{j}\omega) \,\mathrm{d} t \\
+        &= \lim_{T \to \infty} \, \frac{1}{2T} \, \left| X(\mathrm{j}\omega) \right|^2
+    \end{align*}
+    离散情况：$2T \rightarrow NT_s = N/f_s,\, X(\mathrm{j}\omega)\rightarrow X(k)/f_s$
+\end{frame}
+
+
 % 功率谱定义（方差 VS 幅值）
-% 功率谱与幅度谱对比（单频信号 VS 带频信号）
+
 % 功率谱算法
 
 \begin{frame}[standout]
