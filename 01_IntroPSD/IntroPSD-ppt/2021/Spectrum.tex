@@ -13,14 +13,18 @@
         \vspace{12mm}
 
         \begingroup         % title
-        \zihao{3}\color{darkblue}\bfseries 傅立叶变换与功率谱分析
+        \zihao{3}\color{darkblue}\bfseries 傅立叶变换与频域分析简介
         \endgroup
 
         {\color{darkred}\rule{\textwidth}{0.7pt}}
 
         \vspace{3mm}
 
-        肖春雨
+        \begin{tabular}{ll}
+            报 \hfill 告 \hfill 人 & 肖春雨 \\
+            指 \hfill 导 \hfill 老 \hfill 师 & 周泽兵\, 教授 \\
+            & 白彦峥\, 教授
+        \end{tabular}
 
         \vspace{10mm}
 
@@ -49,11 +53,11 @@
             \item 频域采样：栅栏效应
         \end{itemize}
 
-        \item[$\color{darkblue}\bullet$] {\color{darkblue} 随机信号与功率谱估计}
+        \item[$\color{darkblue}\bullet$] {\color{darkblue} 噪声与功率谱估计}
         \begin{itemize}
-            \item 功率谱密度：维纳-辛钦定理
-            \item 谱估计算法：周期图、Welch、LPSD
-            \item 功率谱应用：噪声评估、系统辨识
+            \item 数据的频域特征：幅度谱、功率谱
+            \item 功率谱估计算法：周期图、Welch、LPSD
+            \item 功率谱实际应用：噪声评估、系统辨识
         \end{itemize}
     \end{itemize}
 \end{frame}
@@ -203,12 +207,12 @@
 
     \begin{itemize}
         \item 采样性质：$\int f(t) \delta (t-t_0) \, \mathrm{d} t = f(t_0)$
-        \item 卷积性质：$\int f(\tau) \ast \delta (t-t_0-\tau) \, \mathrm{d} \tau = f(t-t_0)$
+        \item 卷积性质：$f(t) \ast \delta (t-t_0) = \int f(\tau) \delta (t-t_0-\tau) \, \mathrm{d} \tau = f(t-t_0)$
     \end{itemize}
 
     傅立叶变换的统一表达
     \begin{gather*}
-        X(\mathrm{j}\omega) = 2 \pi A_k \delta (\omega - k\omega_0)\\
+        X(\mathrm{j}\omega) = \sum_{k=-\infty}^{+\infty}  2 \pi A_k \delta (\omega - k\omega_0)\\
         \frac{1}{2\pi} \int_{-\infty}^{+\infty} X(\mathrm{j}\omega) \mathrm{e}^{\mathrm{j}\omega t}\,\mathrm{d}\omega 
         \Leftrightarrow  \sum_{k=-\infty}^{+\infty} A_k \mathrm{e}^{\mathrm{j}k\omega_0t}  
     \end{gather*}
@@ -320,13 +324,33 @@
 \end{frame}
 
 
-\section{随机信号与功率谱估计}
+\section{噪声与功率谱估计}
 
 
-\begin{frame}{信号的频域特征}
-    % 功率谱与幅度谱对比（单频信号 VS 带频信号）
+
+\begin{frame}{数据的频域特征}
+    \ % placeholder
+
+    \begin{columns}
+        \begin{column}{0.4\textwidth}
+            数据 = 信号 + 噪声
+            \begin{itemize}
+                \item 信号：确定规律
+                \item 噪声：统计规律
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \centering
+            \includegraphics[width=130pt]{data2021.pdf}
+        \end{column}
+    \end{columns}
+    \begin{figure}
+        \centering
+        \includegraphics[height=110pt]{AS2021.pdf} 
+        \hspace{10pt}
+        \includegraphics[height=110pt]{PSD2021.pdf} 
+    \end{figure}
 \end{frame}
-
 
 
 \begin{frame}{功率谱密度的计算}
@@ -337,13 +361,101 @@
         &= \lim_{T \to \infty} \, \frac{1}{2T} \, \int_{-T}^{T}  x(t)\mathrm{e}^{-\mathrm{j} \omega t} \bar{X}(\mathrm{j}\omega) \,\mathrm{d} t \\
         &= \lim_{T \to \infty} \, \frac{1}{2T} \, \left| X(\mathrm{j}\omega) \right|^2
     \end{align*}
-    离散情况：$2T \rightarrow NT_s = N/f_s,\, X(\mathrm{j}\omega)\rightarrow X(k)/f_s$
+    常用形式
+    \begin{gather*}
+        S_x(\omega) \approx  \frac{1}{Nf_s} \left| X(k) \right|^2
+        \rightarrow \sqrt{\frac{2}{Nf_s}} \left| X(k) \right|
+    \end{gather*}
+\end{frame}
+
+\begin{frame}{功率谱估计算法：周期图}
+    \zihao{-5}
+    \texttt{[pxx,f] = periodogram(x,window,nfft,fs,'onesided');}
+    \vspace{\fill}
+    \begin{columns}
+        \begin{column}{0.4\textwidth}
+            \centering\normalsize
+            数据加窗 \\
+            $\downarrow$ \\
+            FFT计算频谱 \\
+            $\downarrow$ \\
+            计算功率谱密度 \\
+            $\downarrow$ \\
+            汇总并绘图
+        \end{column}
+        \begin{column}{0.6\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{periodogram.pdf}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{功率谱估计算法：Welch}
+    \zihao{-5}
+    \texttt{[pxx,f] = pwelch(x,window,noverlap,nfft,fs,'onesided');}
+    \vspace{\fill}
+    \begin{columns}
+        \begin{column}{0.4\textwidth}
+            \centering\normalsize
+            数据等长分段 \\
+            $\downarrow$ \\
+            每段使用周期图法 \\
+            $\downarrow$ \\
+            各段谱密度对应平均 \\
+            $\downarrow$ \\
+            汇总并绘图
+        \end{column}
+        \begin{column}{0.6\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{pwelch.pdf}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 
-% 功率谱定义（方差 VS 幅值）
 
-% 功率谱算法
+\begin{frame}{功率谱估计算法：LPSD}
+    \zihao{-5}
+    \texttt{[pxx,f] = iLPSD(x,fs);}
+    \footnote{[1] M. Tröbs, et al. Improved Spectrum Estimation from Digitized Time Series on a Logarithmic Frequency Axis.
+    }
+    \footnote{[2] LPSD 功率谱估计. \href{https://ichunyu.github.io/lpsd/}{https://ichunyu.github.io/lpsd/}
+    }
+    
+    \vspace{\fill}
+    \begin{columns}
+        \begin{column}{0.4\textwidth}
+            \centering\normalsize
+            构造对数均匀频率点 \\
+            $\downarrow$ \\
+            根据频率分辨率分段 \\
+            $\downarrow$ \\
+            单点DFT并求各段平均 \\
+            $\downarrow$ \\
+            汇总并绘图
+        \end{column}
+        \begin{column}{0.6\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{lpsd.pdf}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+
+\begin{frame}{功率谱实际应用}
+    示例：噪声测试、系统辨识
+    
+    \begin{figure}
+        \centering
+        \includegraphics[height=120pt]{noise.pdf} 
+        \hspace{10pt}
+        \includegraphics[height=120pt]{sysIdentify.pdf} 
+    \end{figure}
+
+    \footnote{\href{https://github.com/iChunyu/signal-process-demo}{https://github.com/iChunyu/signal-process-demo}}
+\end{frame}
+
+
 
 \begin{frame}[standout]
     \zihao{0} 谢\ 谢\ ！

@@ -5,7 +5,6 @@
 %%
 clear;clc
 close all
-InitPlot(3,25)
 
 fs = 1e3;
 t = (0:1/fs:2)';
