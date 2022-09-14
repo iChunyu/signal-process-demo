@@ -4,11 +4,6 @@
 % XiaoCY 2020-10-21
 
 %%
-set(groot,'DefaultLineLineWidth',2)
-set(groot,'DefaultAxesFontSize',20)
-set(groot,'DefaultFigureColor','w')
-set(groot,'DefaultFigureWindowStyle','docked')
-
 clear;clc
 close all
 
